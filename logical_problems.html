@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Logical Problems Quiz</title>
+
+<style>
+body{
+    font-family: Arial, sans-serif;
+    min-height:100vh;
+    margin:0;
+    background: linear-gradient(135deg,#7588db,#8859b7);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:30px;
+}
+.card{
+    background:#fff;
+    max-width:800px;
+    width:100%;
+    padding:25px;
+    border-radius:12px;
+    box-shadow:0 10px 25px rgba(0,0,0,0.3);
+}
+.question{
+    font-size:19px;
+    font-weight:bold;
+    margin-bottom:20px;
+}
+.option{
+    padding:12px;
+    border:2px solid #ddd;
+    border-radius:8px;
+    margin-bottom:12px;
+    cursor:pointer;
+}
+.option:hover{background:#f1f5f9;}
+.correct{
+    background:#dcfce7;
+    border-color:#22c55e;
+    font-weight:bold;
+}
+.wrong{
+    background:#fee2e2;
+    border-color:#ef4444;
+    font-weight:bold;
+}
+button{
+    padding:10px 16px;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+    margin-top:10px;
+}
+#prevBtn{background:#f59e0b;color:white;}
+#nextBtn{background:#16a34a;color:white;display:none;}
+#explainBtn{background:#2563eb;color:white;display:none;}
+.explanation{
+    margin-top:15px;
+    padding:15px;
+    background:#f8fafc;
+    border-left:4px solid #2563eb;
+    display:none;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card" id="card">
+    <div class="question" id="question"></div>
+    <div id="options"></div>
+
+    <button id="prevBtn" onclick="prevQuestion()">Previous</button>
+    <button id="explainBtn" onclick="toggleExplanation()">Show Explanation</button>
+    <button id="nextBtn" onclick="nextQuestion()">Next</button>
+
+    <div class="explanation" id="explanation"></div>
+</div>
+
+<script>
+const questions = [
+{
+q:"1) If all cats are animals and some animals are dogs, then some cats are definitely dogs. True or False?",
+options:["True","False","Cannot say","None"],
+answer:2,
+explanation:"We cannot conclude that some cats are dogs. The relationship is not definite."
+},
+{
+q:"2) Find the missing number: 2, 4, 8, 16, ?",
+options:["18","24","32","30"],
+answer:2,
+explanation:"Each number is multiplied by 2 → 16 × 2 = 32"
+},
+{
+q:"3) Statements: Some pens are pencils. Some pencils are erasers. Conclusions: 1) Some pens are erasers. 2) Some pencils are pens. Which is true?",
+options:["Only 1","Only 2","Both","None"],
+answer:1,
+explanation:"Only conclusion 2 is true based on given statements."
+},
+{
+q:"4) If Monday is 1, Tuesday is 2, …, then Sunday is?",
+options:["6","7","0","8"],
+answer:1,
+explanation:"Days of the week → Sunday = 7"
+},
+{
+q:"5) Find the odd one out: 2, 3, 5, 7, 11, 14",
+options:["2","3","5","14"],
+answer:3,
+explanation:"All numbers are prime except 14."
+},
+{
+q:"6) A is taller than B. C is shorter than A but taller than B. Who is the shortest?",
+options:["A","B","C","Cannot determine"],
+answer:1,
+explanation:"B is shorter than C and A → B is shortest."
+},
+{
+q:"7) Complete the pattern: 1, 1, 2, 6, 24, ?",
+options:["24","48","120","60"],
+answer:2,
+explanation:"Factorial series: 1!,2!,3!,4!,5! → next = 5! = 120"
+},
+{
+q:"8) If 'CAT' is coded as 'DBU', then 'DOG' is coded as?",
+options:["EPH","DPH","EPG","DPI"],
+answer:0,
+explanation:"Each letter +1 → D+1=E, O+1=P, G+1=H → EPH"
+},
+{
+q:"9) Which direction is opposite to South-West?",
+options:["North","North-East","South","West"],
+answer:1,
+explanation:"Opposite of South-West is North-East."
+},
+{
+q:"10) If 5 pencils cost ₹10, how much do 8 pencils cost?",
+options:["₹12","₹14","₹16","₹18"],
+answer:2,
+explanation:"Cost per pencil = 10/5=2 → 8×2=₹16"
+}
+];
+
+let index=0;
+
+function loadQuestion(){
+    const q=questions[index];
+    document.getElementById("question").innerText=q.q;
+    const optDiv=document.getElementById("options");
+    optDiv.innerHTML="";
+    document.getElementById("explanation").style.display="none";
+    document.getElementById("nextBtn").style.display="none";
+    document.getElementById("explainBtn").style.display="none";
+    document.getElementById("prevBtn").disabled=index===0;
+
+    q.options.forEach((opt,i)=>{
+        const d=document.createElement("div");
+        d.className="option";
+        d.innerText=opt;
+        d.onclick=()=>checkAnswer(d,i);
+        optDiv.appendChild(d);
+    });
+}
+
+function checkAnswer(selected,i){
+    const q=questions[index];
+    const opts=document.querySelectorAll(".option");
+    opts.forEach((o,idx)=>{
+        o.onclick=null;
+        if(idx===q.answer) o.classList.add("correct");
+    });
+    if(i!==q.answer) selected.classList.add("wrong");
+
+    document.getElementById("explanation").innerText=q.explanation;
+    document.getElementById("nextBtn").style.display="inline-block";
+    document.getElementById("explainBtn").style.display="inline-block";
+}
+
+function toggleExplanation(){
+    const e=document.getElementById("explanation");
+    e.style.display=e.style.display==="none"?"block":"none";
+}
+
+function nextQuestion(){
+    index++;
+    if(index<questions.length) loadQuestion();
+    else document.getElementById("card").innerHTML =
+        "<h2>🎉 Quiz Completed!</h2><p>You finished Logical Problems questions.</p>";
+}
+
+function prevQuestion(){
+    if(index>0){ index--; loadQuestion(); }
+}
+
+loadQuestion();
+</script>
+
+</body>
+</html>

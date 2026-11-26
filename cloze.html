@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Cloze Test Quiz</title>
+
+<style>
+body{
+    margin:0;
+    min-height:100vh;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg,#7588db,#8859b7);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:30px;
+}
+.card{
+    background:#ffffff;
+    max-width:950px;
+    width:100%;
+    padding:25px;
+    border-radius:14px;
+    box-shadow:0 15px 30px rgba(0,0,0,0.3);
+}
+.passage{
+    font-size:16px;
+    line-height:1.6;
+    margin-bottom:20px;
+}
+.question{
+    font-size:18px;
+    font-weight:bold;
+    margin-bottom:15px;
+}
+.option{
+    padding:12px;
+    border:2px solid #e5e7eb;
+    border-radius:8px;
+    margin-bottom:12px;
+    cursor:pointer;
+}
+.option:hover{background:#f9fafb;}
+.correct{
+    background:#dcfce7;
+    border-color:#22c55e;
+    font-weight:bold;
+}
+.wrong{
+    background:#fee2e2;
+    border-color:#ef4444;
+    font-weight:bold;
+}
+button{
+    padding:10px 16px;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+    margin-top:12px;
+}
+#prevBtn{background:#f59e0b;color:#fff;}
+#nextBtn{background:#16a34a;color:#fff;display:none;}
+#explainBtn{background:#2563eb;color:#fff;display:none;}
+.explanation{
+    margin-top:15px;
+    padding:15px;
+    background:#f1f5f9;
+    border-left:4px solid #2563eb;
+    display:none;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card" id="card">
+
+    <div class="passage" id="passage"></div>
+
+    <div class="question" id="question"></div>
+    <div id="options"></div>
+
+    <button id="prevBtn" onclick="prevQuestion()">Previous</button>
+    <button id="explainBtn" onclick="toggleExplanation()">Show Explanation</button>
+    <button id="nextBtn" onclick="nextQuestion()">Next</button>
+
+    <div class="explanation" id="explanation"></div>
+</div>
+
+<script>
+const passageText =
+"Reading books is a good habit. It helps people to improve their knowledge and ______ (1) skills. Regular reading also improves ______ (2) and makes a person more confident. People who read daily can express their ideas ______ (3) and understand the world better.";
+
+const questions = [
+{
+q:"1) Select the correct word for blank (1):",
+options:["physical","analytical","driving","technical"],
+answer:1,
+explanation:"Reading improves analytical skills."
+},
+{
+q:"2) Select the correct word for blank (2):",
+options:["strength","concentration","hunger","sleep"],
+answer:1,
+explanation:"Reading regularly improves concentration."
+},
+{
+q:"3) Select the correct word for blank (3):",
+options:["badly","clearly","slowly","rudely"],
+answer:1,
+explanation:"Readers can express their ideas clearly."
+}
+];
+
+let index = 0;
+
+function loadQuestion(){
+    document.getElementById("passage").innerText = passageText;
+    const q = questions[index];
+    document.getElementById("question").innerText = q.q;
+
+    const optDiv = document.getElementById("options");
+    optDiv.innerHTML = "";
+
+    document.getElementById("explanation").style.display = "none";
+    document.getElementById("nextBtn").style.display = "none";
+    document.getElementById("explainBtn").style.display = "none";
+    document.getElementById("prevBtn").disabled = index === 0;
+
+    q.options.forEach((opt,i)=>{
+        const d = document.createElement("div");
+        d.className = "option";
+        d.innerText = opt;
+        d.onclick = ()=>checkAnswer(d,i);
+        optDiv.appendChild(d);
+    });
+}
+
+function checkAnswer(selected,i){
+    const q = questions[index];
+    const opts = document.querySelectorAll(".option");
+
+    opts.forEach((o,idx)=>{
+        o.onclick = null;
+        if(idx === q.answer) o.classList.add("correct");
+    });
+
+    if(i !== q.answer) selected.classList.add("wrong");
+
+    document.getElementById("explanation").innerText = q.explanation;
+    document.getElementById("nextBtn").style.display = "inline-block";
+    document.getElementById("explainBtn").style.display = "inline-block";
+}
+
+function toggleExplanation(){
+    const e = document.getElementById("explanation");
+    e.style.display = e.style.display === "none" ? "block" : "none";
+}
+
+function nextQuestion(){
+    index++;
+    if(index < questions.length){
+        loadQuestion();
+    } else {
+        document.getElementById("card").innerHTML =
+        "<h2>🎉 Cloze Test Completed!</h2><p>You have completed the Cloze Test.</p>";
+    }
+}
+
+function prevQuestion(){
+    if(index > 0){
+        index--;
+        loadQuestion();
+    }
+}
+
+loadQuestion();
+</script>
+
+</body>
+</html>

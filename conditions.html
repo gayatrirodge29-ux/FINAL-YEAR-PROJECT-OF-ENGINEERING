@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Conditions Quiz</title>
+
+<style>
+body{
+    font-family: Arial, sans-serif;
+    min-height:100vh;
+    margin:0;
+    background: linear-gradient(135deg,#7588db,#8859b7);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:30px;
+}
+.card{
+    background:#fff;
+    max-width:850px;
+    width:100%;
+    padding:25px;
+    border-radius:12px;
+    box-shadow:0 10px 25px rgba(0,0,0,0.3);
+}
+.question{
+    font-size:19px;
+    font-weight:bold;
+    margin-bottom:20px;
+}
+.option{
+    padding:12px;
+    border:2px solid #ddd;
+    border-radius:8px;
+    margin-bottom:12px;
+    cursor:pointer;
+}
+.option:hover{background:#f1f5f9;}
+.correct{
+    background:#dcfce7;
+    border-color:#22c55e;
+    font-weight:bold;
+}
+.wrong{
+    background:#fee2e2;
+    border-color:#ef4444;
+    font-weight:bold;
+}
+button{
+    padding:10px 16px;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+    margin-top:10px;
+}
+#prevBtn{background:#f59e0b;color:white;}
+#nextBtn{background:#16a34a;color:white;display:none;}
+#explainBtn{background:#2563eb;color:white;display:none;}
+.explanation{
+    margin-top:15px;
+    padding:15px;
+    background:#f8fafc;
+    border-left:4px solid #2563eb;
+    display:none;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card" id="card">
+    <div class="question" id="question"></div>
+    <div id="options"></div>
+
+    <button id="prevBtn" onclick="prevQuestion()">Previous</button>
+    <button id="explainBtn" onclick="toggleExplanation()">Show Explanation</button>
+    <button id="nextBtn" onclick="nextQuestion()">Next</button>
+
+    <div class="explanation" id="explanation"></div>
+</div>
+
+<script>
+const questions = [
+{
+q:"1) Which statement is used for decision making?",
+options:["loop","array","if-else","function"],
+answer:2,
+explanation:"if-else is used to make decisions based on conditions"
+},
+{
+q:"2) What is the output?\nint a=10;\nif(a>5) System.out.print(\"Yes\");",
+options:["Yes","No","Error","Nothing"],
+answer:0,
+explanation:"Condition is true → Yes is printed"
+},
+{
+q:"3) Which operator is used for equality check?",
+options:["=","!=","==","<="],
+answer:2,
+explanation:"== checks equality"
+},
+{
+q:"4) What is the output?\nint a=5;\nif(a>10) System.out.print(\"A\"); else System.out.print(\"B\");",
+options:["A","B","AB","Error"],
+answer:1,
+explanation:"Condition false → else part executes"
+},
+{
+q:"5) Which keyword is used for multiple conditions?",
+options:["else","else if","if","switch"],
+answer:1,
+explanation:"else if is used to check multiple conditions"
+},
+{
+q:"6) What is the output?\nint x=7;\nif(x%2==0) System.out.print(\"Even\"); else System.out.print(\"Odd\");",
+options:["Even","Odd","7","Error"],
+answer:1,
+explanation:"7 is odd → Odd printed"
+},
+{
+q:"7) switch statement works with which data type?",
+options:["int","char","String","All of these"],
+answer:3,
+explanation:"switch supports int, char, String etc."
+},
+{
+q:"8) Which keyword is compulsory in switch case?",
+options:["continue","break","return","goto"],
+answer:1,
+explanation:"break stops execution of switch"
+},
+{
+q:"9) What happens if break is not used in switch?",
+options:["Error","Loop runs","Fall through","Program stops"],
+answer:2,
+explanation:"Execution falls through next cases"
+},
+{
+q:"10) Which condition is always true?",
+options:["5<2","10==5","1<=1","7!=7"],
+answer:2,
+explanation:"1<=1 is always true"
+}
+];
+
+let index = 0;
+
+function loadQuestion(){
+    const q = questions[index];
+    document.getElementById("question").innerText = q.q;
+    const optDiv = document.getElementById("options");
+    optDiv.innerHTML="";
+    document.getElementById("explanation").style.display="none";
+    document.getElementById("nextBtn").style.display="none";
+    document.getElementById("explainBtn").style.display="none";
+    document.getElementById("prevBtn").disabled=index===0;
+
+    q.options.forEach((opt,i)=>{
+        const d=document.createElement("div");
+        d.className="option";
+        d.innerText=opt;
+        d.onclick=()=>checkAnswer(d,i);
+        optDiv.appendChild(d);
+    });
+}
+
+function checkAnswer(selected,i){
+    const q = questions[index];
+    const opts = document.querySelectorAll(".option");
+
+    opts.forEach((o,idx)=>{
+        o.onclick=null;
+        if(idx===q.answer) o.classList.add("correct");
+    });
+
+    if(i!==q.answer) selected.classList.add("wrong");
+
+    document.getElementById("explanation").innerText=q.explanation;
+    document.getElementById("nextBtn").style.display="inline-block";
+    document.getElementById("explainBtn").style.display="inline-block";
+}
+
+function toggleExplanation(){
+    const e=document.getElementById("explanation");
+    e.style.display=e.style.display==="none"?"block":"none";
+}
+
+function nextQuestion(){
+    index++;
+    if(index<questions.length) loadQuestion();
+    else document.getElementById("card").innerHTML =
+        "<h2>🎉 Quiz Completed!</h2><p>You finished Condition questions.</p>";
+}
+
+function prevQuestion(){
+    if(index>0){ index--; loadQuestion(); }
+}
+
+loadQuestion();
+</script>
+
+</body>
+</html>

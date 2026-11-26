@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Analogies Quiz</title>
+
+<style>
+body{
+    font-family: Arial, sans-serif;
+    min-height:100vh;
+    margin:0;
+    background: linear-gradient(135deg,#7588db,#8859b7);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:30px;
+}
+.card{
+    background:#fff;
+    max-width:800px;
+    width:100%;
+    padding:25px;
+    border-radius:12px;
+    box-shadow:0 10px 25px rgba(0,0,0,0.3);
+}
+.question{
+    font-size:19px;
+    font-weight:bold;
+    margin-bottom:20px;
+}
+.option{
+    padding:12px;
+    border:2px solid #ddd;
+    border-radius:8px;
+    margin-bottom:12px;
+    cursor:pointer;
+}
+.option:hover{background:#f1f5f9;}
+.correct{
+    background:#dcfce7;
+    border-color:#22c55e;
+    font-weight:bold;
+}
+.wrong{
+    background:#fee2e2;
+    border-color:#ef4444;
+    font-weight:bold;
+}
+button{
+    padding:10px 16px;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+    margin-top:10px;
+}
+#prevBtn{background:#f59e0b;color:white;}
+#nextBtn{background:#16a34a;color:white;display:none;}
+#explainBtn{background:#2563eb;color:white;display:none;}
+.explanation{
+    margin-top:15px;
+    padding:15px;
+    background:#f8fafc;
+    border-left:4px solid #2563eb;
+    display:none;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card" id="card">
+    <div class="question" id="question"></div>
+    <div id="options"></div>
+
+    <button id="prevBtn" onclick="prevQuestion()">Previous</button>
+    <button id="explainBtn" onclick="toggleExplanation()">Show Explanation</button>
+    <button id="nextBtn" onclick="nextQuestion()">Next</button>
+
+    <div class="explanation" id="explanation"></div>
+</div>
+
+<script>
+const questions = [
+{
+q:"1) Dog : Puppy :: Cat : ?",
+options:["Kitten","Cub","Foal","Calf"],
+answer:0,
+explanation:"A puppy is the young of a dog. Similarly, a kitten is the young of a cat."
+},
+{
+q:"2) Bird : Nest :: Bee : ?",
+options:["Hive","Honey","Flower","Tree"],
+answer:0,
+explanation:"A bird lives in a nest. A bee lives in a hive."
+},
+{
+q:"3) Hand : Glove :: Foot : ?",
+options:["Sock","Shoe","Boot","Slipper"],
+answer:1,
+explanation:"A glove covers a hand, a shoe covers a foot."
+},
+{
+q:"4) Pen : Write :: Knife : ?",
+options:["Cut","Sharpen","Eat","Slice"],
+answer:0,
+explanation:"A pen is used to write. A knife is used to cut."
+},
+{
+q:"5) Moon : Night :: Sun : ?",
+options:["Day","Star","Sky","Light"],
+answer:0,
+explanation:"The moon is associated with night. The sun is associated with day."
+},
+{
+q:"6) Fish : Water :: Bird : ?",
+options:["Nest","Air","Tree","Sky"],
+answer:3,
+explanation:"Fish lives in water, bird lives in the sky."
+},
+{
+q:"7) Book : Read :: Bell : ?",
+options:["Ring","Sound","Call","Chime"],
+answer:0,
+explanation:"A book is read, a bell is rung."
+},
+{
+q:"8) Lion : Cub :: Elephant : ?",
+options:["Calf","Foal","Fawn","Puppy"],
+answer:0,
+explanation:"A cub is a young lion. A calf is a young elephant."
+},
+{
+q:"9) Lock : Key :: Door : ?",
+options:["Handle","Hinge","Knob","Lock"],
+answer:3,
+explanation:"A key opens a lock. A lock is used for a door."
+},
+{
+q:"10) Cold : Hot :: Winter : ?",
+options:["Summer","Rainy","Autumn","Spring"],
+answer:0,
+explanation:"Cold is opposite of hot. Winter is opposite of summer."
+}
+];
+
+let index=0;
+
+function loadQuestion(){
+    const q=questions[index];
+    document.getElementById("question").innerText=q.q;
+    const optDiv=document.getElementById("options");
+    optDiv.innerHTML="";
+    document.getElementById("explanation").style.display="none";
+    document.getElementById("nextBtn").style.display="none";
+    document.getElementById("explainBtn").style.display="none";
+    document.getElementById("prevBtn").disabled=index===0;
+
+    q.options.forEach((opt,i)=>{
+        const d=document.createElement("div");
+        d.className="option";
+        d.innerText=opt;
+        d.onclick=()=>checkAnswer(d,i);
+        optDiv.appendChild(d);
+    });
+}
+
+function checkAnswer(selected,i){
+    const q=questions[index];
+    const opts=document.querySelectorAll(".option");
+    opts.forEach((o,idx)=>{
+        o.onclick=null;
+        if(idx===q.answer) o.classList.add("correct");
+    });
+    if(i!==q.answer) selected.classList.add("wrong");
+
+    document.getElementById("explanation").innerText=q.explanation;
+    document.getElementById("nextBtn").style.display="inline-block";
+    document.getElementById("explainBtn").style.display="inline-block";
+}
+
+function toggleExplanation(){
+    const e=document.getElementById("explanation");
+    e.style.display=e.style.display==="none"?"block":"none";
+}
+
+function nextQuestion(){
+    index++;
+    if(index<questions.length) loadQuestion();
+    else document.getElementById("card").innerHTML =
+        "<h2>🎉 Quiz Completed!</h2><p>You finished Analogies questions.</p>";
+}
+
+function prevQuestion(){
+    if(index>0){ index--; loadQuestion(); }
+}
+
+loadQuestion();
+</script>
+
+</body>
+</html>

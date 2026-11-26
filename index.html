@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Home | Aptitude Learning</title>
+
+    <!-- Font Awesome Icons CDN -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+
+    <style>
+      :root {
+        --accent: #2b6cb0;
+        --accent-light: #63b3ed;
+        --bg: #b6b8c0;
+        --white: #f6f0f4;
+        --dark: #0f172a;
+      }
+
+      body {
+        margin: 0;
+        font-family: "Inter", system-ui, Arial, sans-serif;
+        background: var(--bg);
+        color: var(--dark);
+      }
+
+      header {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        background: linear-gradient(120deg, var(--accent), var(--accent-light));
+        color: white;
+        padding: 20px;
+      }
+
+      .hero {
+        max-width: 750px;
+        background: rgba(255, 255, 255, 0.12);
+        padding: 50px 30px;
+        border-radius: 20px;
+        backdrop-filter: blur(6px);
+      }
+
+      .hero h1 {
+        font-size: 46px;
+        margin-bottom: 12px;
+        letter-spacing: -1px;
+      }
+
+      .hero h1 i {
+        margin-right: 10px;
+        color: #fef3c7;
+      }
+
+      .hero p {
+        font-size: 18px;
+        opacity: 0.95;
+        margin-bottom: 25px;
+      }
+
+      .skills {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 14px;
+        margin-bottom: 30px;
+      }
+
+      .skill {
+        background: rgba(255, 255, 255, 0.2);
+        padding: 12px;
+        border-radius: 12px;
+        font-size: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+      }
+
+      .skill i {
+        font-size: 18px;
+        color: #fde68a;
+      }
+
+      .btn {
+        display: inline-block;
+        padding: 14px 28px;
+        font-size: 16px;
+        font-weight: 600;
+        border-radius: 12px;
+        text-decoration: none;
+        background: white;
+        color: var(--accent);
+        transition:
+          transform 0.2s ease,
+          background 0.2s ease;
+      }
+
+      .btn i {
+        margin-right: 8px;
+      }
+
+      .btn:hover {
+        transform: translateY(-3px);
+        background: #edf2f7;
+      }
+
+      footer {
+        background: #e2e8f0;
+        text-align: center;
+        padding: 20px;
+        color: #64748b;
+      }
+
+      @media (max-width: 520px) {
+        .hero h1 {
+          font-size: 32px;
+        }
+        .hero {
+          padding: 36px 20px;
+        }
+      }
+      /* ---------- Animations ---------- */
+      @keyframes fadeSlideUp {
+        0% {
+          opacity: 0;
+          transform: translateY(40px);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes floatIcon {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-6px);
+        }
+      }
+
+      @keyframes pulseBtn {
+        0% {
+          box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.6);
+        }
+        70% {
+          box-shadow: 0 0 0 14px rgba(255, 255, 255, 0);
+        }
+        100% {
+          box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+        }
+      }
+
+      /* ---------- Apply Animations ---------- */
+
+      .hero {
+        animation: fadeSlideUp 1s ease forwards;
+      }
+
+      .hero h1 {
+        animation: fadeSlideUp 1s ease forwards;
+        animation-delay: 0.2s;
+      }
+
+      .hero p {
+        animation: fadeSlideUp 1s ease forwards;
+        animation-delay: 0.4s;
+      }
+
+      .skills {
+        animation: fadeSlideUp 1s ease forwards;
+        animation-delay: 0.6s;
+      }
+
+      .skill i {
+        animation: floatIcon 2.5s ease-in-out infinite;
+      }
+
+      .btn {
+        animation:
+          fadeSlideUp 1s ease forwards,
+          pulseBtn 2.5s infinite;
+        animation-delay: 0.8s;
+      }
+      .top-btn {
+        position: absolute;
+        top: 50px;
+        right: 40px;
+        padding: 10px 18px;
+        font-size: 14px;
+        font-weight: 600;
+        border-radius: 10px;
+        text-decoration: none;
+        background: white;
+        color: var(--accent);
+        transition: 0.2s ease;
+      }
+
+      .top-btn:hover {
+        background: #edf2f7;
+        transform: translateY(-2px);
+      }
+    </style>
+  </head>
+
+  <body>
+    <header>
+      <a href="anotherpage.html" class="top-btn">
+        <i class="fa-solid fa-arrow-right"></i> Exams
+      </a>
+
+      <div class="hero">
+        <h1>
+          <i class="fa-solid fa-graduation-cap"></i>Welcome to Aptitude Learning
+        </h1>
+        <p>
+          Improve your Quantitative, Reasoning, Verbal & Logical skills with
+          structured practice and easy explanations.
+        </p>
+
+        <div class="skills">
+          <div class="skill">
+            <i class="fa-solid fa-calculator"></i> Quantitative
+          </div>
+          <div class="skill"><i class="fa-solid fa-brain"></i> Reasoning</div>
+          <div class="skill">
+            <i class="fa-solid fa-book"></i> Verbal Ability
+          </div>
+          <div class="skill">
+            <i class="fa-solid fa-code"></i> Logical / Pseudo
+          </div>
+        </div>
+
+        <a href="appti.html" class="btn">
+          <i class="fa-solid fa-rocket"></i>Go to Aptitude Section
+        </a>
+      </div>
+    </header>
+
+    <footer>© 2026 Aptitude Learning | Start Smart, Think Sharp 🚀</footer>
+  </body>
+</html>

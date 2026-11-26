@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Selecting Words Quiz</title>
+
+<style>
+body{
+    margin:0;
+    min-height:100vh;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg,#7588db,#8859b7);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:30px;
+}
+.card{
+    background:#ffffff;
+    max-width:850px;
+    width:100%;
+    padding:25px;
+    border-radius:14px;
+    box-shadow:0 15px 30px rgba(0,0,0,0.3);
+    animation:fadeIn 0.6s ease;
+}
+@keyframes fadeIn{
+    from{opacity:0;transform:translateY(30px);}
+    to{opacity:1;transform:translateY(0);}
+}
+.question{
+    font-size:18px;
+    font-weight:bold;
+    margin-bottom:18px;
+}
+.option{
+    padding:12px;
+    border:2px solid #e5e7eb;
+    border-radius:8px;
+    margin-bottom:12px;
+    cursor:pointer;
+    transition:0.3s;
+}
+.option:hover{
+    background:#f9fafb;
+    transform:scale(1.01);
+}
+.correct{
+    background:#dcfce7;
+    border-color:#22c55e;
+    font-weight:bold;
+}
+.wrong{
+    background:#fee2e2;
+    border-color:#ef4444;
+    font-weight:bold;
+}
+button{
+    padding:10px 16px;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+    margin-top:12px;
+}
+#prevBtn{background:#f59e0b;color:white;}
+#nextBtn{background:#16a34a;color:white;display:none;}
+#explainBtn{background:#2563eb;color:white;display:none;}
+.explanation{
+    margin-top:15px;
+    padding:15px;
+    background:#f1f5f9;
+    border-left:4px solid #2563eb;
+    display:none;
+}
+.footer{
+    margin-top:15px;
+    font-size:14px;
+    color:#475569;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card" id="card">
+    <div class="question" id="question"></div>
+    <div id="options"></div>
+
+    <button id="prevBtn" onclick="prevQuestion()">Previous</button>
+    <button id="explainBtn" onclick="toggleExplanation()">Show Explanation</button>
+    <button id="nextBtn" onclick="nextQuestion()">Next</button>
+
+    <div class="explanation" id="explanation"></div>
+    <div class="footer">Choose the most appropriate word.</div>
+</div>
+
+<script>
+const questions = [
+{
+q:"1) He was punished because he _____ the rules.",
+options:["Followed","Violated","Observed","Respected"],
+answer:1,
+explanation:"Punishment happens when rules are violated."
+},
+{
+q:"2) She spoke so _____ that everyone listened carefully.",
+options:["Rudely","Softly","Carelessly","Angrily"],
+answer:1,
+explanation:"Soft speech makes people listen attentively."
+},
+{
+q:"3) The teacher _____ the students for their good performance.",
+options:["Criticized","Punished","Praised","Ignored"],
+answer:2,
+explanation:"Good performance is praised."
+},
+{
+q:"4) He is _____ than his brother in mathematics.",
+options:["Good","Better","Best","Well"],
+answer:1,
+explanation:"Comparison between two people uses 'better'."
+},
+{
+q:"5) The news was too good to be _____.",
+options:["True","False","Wrong","Incorrect"],
+answer:0,
+explanation:"Common phrase: too good to be true."
+},
+{
+q:"6) She was absent _____ illness.",
+options:["Because","Because of","Due","Since"],
+answer:1,
+explanation:"Because of is followed by a noun (illness)."
+},
+{
+q:"7) He ran _____ to catch the bus.",
+options:["Slowly","Quickly","Quietly","Carefully"],
+answer:1,
+explanation:"To catch a bus, one runs quickly."
+},
+{
+q:"8) The manager was _____ with the employee’s work.",
+options:["Angry","Satisfied","Upset","Displeased"],
+answer:1,
+explanation:"Satisfied shows approval of work."
+},
+{
+q:"9) We must _____ the rules of the organization.",
+options:["Break","Obey","Avoid","Forget"],
+answer:1,
+explanation:"Rules should be obeyed."
+},
+{
+q:"10) The child was _____ tired to continue walking.",
+options:["Very","So","Too","Enough"],
+answer:2,
+explanation:"Correct structure: too tired to continue."
+}
+];
+
+let index=0;
+
+function loadQuestion(){
+    const q=questions[index];
+    document.getElementById("question").innerText=q.q;
+    const optDiv=document.getElementById("options");
+    optDiv.innerHTML="";
+    document.getElementById("explanation").style.display="none";
+    document.getElementById("nextBtn").style.display="none";
+    document.getElementById("explainBtn").style.display="none";
+    document.getElementById("prevBtn").disabled=index===0;
+
+    q.options.forEach((opt,i)=>{
+        const d=document.createElement("div");
+        d.className="option";
+        d.innerText=opt;
+        d.onclick=()=>checkAnswer(d,i);
+        optDiv.appendChild(d);
+    });
+}
+
+function checkAnswer(selected,i){
+    const q=questions[index];
+    const opts=document.querySelectorAll(".option");
+
+    opts.forEach((o,idx)=>{
+        o.onclick=null;
+        if(idx===q.answer) o.classList.add("correct");
+    });
+
+    if(i!==q.answer) selected.classList.add("wrong");
+
+    document.getElementById("explanation").innerText=q.explanation;
+    document.getElementById("nextBtn").style.display="inline-block";
+    document.getElementById("explainBtn").style.display="inline-block";
+}
+
+function toggleExplanation(){
+    const e=document.getElementById("explanation");
+    e.style.display=e.style.display==="none"?"block":"none";
+}
+
+function nextQuestion(){
+    index++;
+    if(index<questions.length){
+        loadQuestion();
+    }else{
+        document.getElementById("card").innerHTML=
+        "<h2>🎉 Quiz Completed!</h2><p>You have finished the Selecting Words test.</p>";
+    }
+}
+
+function prevQuestion(){
+    if(index>0){index--;loadQuestion();}
+}
+
+loadQuestion();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Aptitude</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --accent: #2b6cb0;
+      --accent-light: #63b3ed;
+      --muted: #676869;
+      --bg: #cacbd0;
+      --white: #f6f0f4;
+    }
+
+    body {
+      font-family: "Inter", system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+      margin: 0;
+      background: var(--bg);
+      color: #0f172a;
+      line-height: 1.5;
+    }
+
+    header {
+      background: linear-gradient(90deg, var(--accent), #3182ce);
+      color: white;
+      padding: 40px 20px;
+      text-align: center;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 36px;
+      letter-spacing: -0.5px;
+    }
+
+    header p.lead {
+      margin-top: 8px;
+      color: rgba(233, 230, 232, 0.9);
+      font-size: 16px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 30px 16px;
+    }
+
+    h2.section-title {
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 22px;
+      color: var(--accent);
+      position: relative;
+    }
+
+    h2.section-title::after {
+      content: "";
+      width: 50px;
+      height: 3px;
+      background: var(--accent);
+      display: block;
+      margin: 8px auto 0;
+      border-radius: 2px;
+    }
+
+    /* Fixed 5-column grid */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .card {
+      background: var(--white);
+      border-radius: 12px;
+      padding: 18px;
+      box-shadow: 0 4px 14px rgba(2, 6, 23, 0.08);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      position: relative;
+      overflow: hidden;
+      min-height: 110px;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 70%;
+      height: 3px;
+      background: var(--accent);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .card:hover::before {
+      opacity: 1;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 20px rgba(2, 6, 23, 0.12);
+    }
+
+    .card h3 {
+      margin: 0 0 8px 0;
+      font-size: 17px;
+      color: #1e293b;
+    }
+
+    .button {
+      display: inline-block;
+      padding: 8px 12px;
+      border-radius: 8px;
+      background: var(--accent);
+      color: #fff;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 14px;
+      transition: background 0.2s;
+    }
+
+    .button:hover {
+      background: var(--accent-light);
+    }
+
+    footer {
+      padding: 18px;
+      text-align: center;
+      color: var(--muted);
+      background: #e2e8f0;
+      margin-top: 30px;
+      font-size: 14px;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 1024px) {
+      .grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 520px) {
+      header {
+        padding: 28px 14px;
+      }
+      header h1 {
+        font-size: 28px;
+      }
+      .card {
+        padding: 16px;
+      }
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Aptitude</h1>
+    <p class="lead">Sharpen your problem solving — quick lessons, practice questions and explanations.</p>
+  </header>
+
+  <main class="container">
+    <h2 class="section-title">Pseudo-code Questions</h2>
+    <div class="grid">
+      <article class="card"><h3>Loops</h3><a class="button" href="loops.html">Start Practice</a></article>
+      <article class="card"><h3>Conditions</h3><a class="button" href="conditions.html">Start Practice</a></article>
+      <article class="card"><h3>Statements</h3><a class="button" href="statements.html">Start Practice</a></article>
+      <article class="card"><h3>Arrays</h3><a class="button" href="Array.html">Start Practice</a></article>
+      <article class="card"><h3>Strings</h3><a class="button" href="strings.html">Start Practice</a></article>
+      <article class="card"><h3>Function</h3><a class="button" href="functions.html">Start Practice</a></article>
+      <article class="card"><h3>Recursion</h3><a class="button" href="recursion.html">Start Practice</a></article>
+      <article class="card"><h3>Data Stucture</h3><a class="button" href="data structure.html">Start Practice</a></article>
+      <article class="card"><h3>Stacks</h3><a class="button" href="stack.html">Start Practice</a></article>
+      <article class="card"><h3>Queues</h3><a class="button" href="queues.html">Start Practice</a></article>
+    </div>
+  </main>
+
+  <footer>
+    © 2026 Aptitude | Designed with ❤️ to boost your skills
+  </footer>
+</body>
+</html>

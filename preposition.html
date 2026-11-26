@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Prepositions Quiz</title>
+
+<style>
+body{
+    margin:0;
+    min-height:100vh;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg,#7588db,#8859b7);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:30px;
+}
+.card{
+    background:#ffffff;
+    max-width:900px;
+    width:100%;
+    padding:25px;
+    border-radius:14px;
+    box-shadow:0 15px 30px rgba(0,0,0,0.3);
+}
+.question{
+    font-size:18px;
+    font-weight:bold;
+    margin-bottom:18px;
+}
+.option{
+    padding:12px;
+    border:2px solid #e5e7eb;
+    border-radius:8px;
+    margin-bottom:12px;
+    cursor:pointer;
+}
+.option:hover{background:#f9fafb;}
+.correct{
+    background:#dcfce7;
+    border-color:#22c55e;
+    font-weight:bold;
+}
+.wrong{
+    background:#fee2e2;
+    border-color:#ef4444;
+    font-weight:bold;
+}
+button{
+    padding:10px 16px;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+    margin-top:12px;
+}
+#prevBtn{background:#f59e0b;color:#fff;}
+#nextBtn{background:#16a34a;color:#fff;display:none;}
+#explainBtn{background:#2563eb;color:#fff;display:none;}
+.explanation{
+    margin-top:15px;
+    padding:15px;
+    background:#f1f5f9;
+    border-left:4px solid #2563eb;
+    display:none;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card" id="card">
+    <div class="question" id="question"></div>
+    <div id="options"></div>
+
+    <button id="prevBtn" onclick="prevQuestion()">Previous</button>
+    <button id="explainBtn" onclick="toggleExplanation()">Show Explanation</button>
+    <button id="nextBtn" onclick="nextQuestion()">Next</button>
+
+    <div class="explanation" id="explanation"></div>
+</div>
+
+<script>
+const questions = [
+{
+q:"1) The cat is sitting ___ the table.",
+options:["in","on","at","under"],
+answer:1,
+explanation:"Use 'on' when something is placed on a surface."
+},
+{
+q:"2) She has been living here ___ 2018.",
+options:["since","for","from","by"],
+answer:0,
+explanation:"'Since' is used with a point of time."
+},
+{
+q:"3) He is good ___ mathematics.",
+options:["in","on","at","with"],
+answer:2,
+explanation:"'Good at' is the correct prepositional phrase."
+},
+{
+q:"4) The train will arrive ___ 6 AM.",
+options:["in","at","on","by"],
+answer:1,
+explanation:"'At' is used for exact time."
+},
+{
+q:"5) The boy jumped ___ the river.",
+options:["into","onto","over","in"],
+answer:0,
+explanation:"'Into' shows movement inside something."
+},
+{
+q:"6) She is afraid ___ dogs.",
+options:["from","of","with","for"],
+answer:1,
+explanation:"'Afraid of' is the correct usage."
+},
+{
+q:"7) The meeting was postponed ___ Monday.",
+options:["in","at","on","by"],
+answer:2,
+explanation:"'On' is used for days and dates."
+},
+{
+q:"8) He divided the money ___ his brothers.",
+options:["between","among","with","into"],
+answer:0,
+explanation:"'Between' is used when referring to two people."
+},
+{
+q:"9) She is interested ___ music.",
+options:["in","on","at","about"],
+answer:0,
+explanation:"'Interested in' is the correct phrase."
+},
+{
+q:"10) The book is ___ the bag.",
+options:["on","in","at","over"],
+answer:1,
+explanation:"'In' is used when something is inside."
+}
+];
+
+let index = 0;
+
+function loadQuestion(){
+    const q = questions[index];
+    document.getElementById("question").innerText = q.q;
+    const optDiv = document.getElementById("options");
+    optDiv.innerHTML = "";
+
+    document.getElementById("explanation").style.display = "none";
+    document.getElementById("nextBtn").style.display = "none";
+    document.getElementById("explainBtn").style.display = "none";
+    document.getElementById("prevBtn").disabled = index === 0;
+
+    q.options.forEach((opt,i)=>{
+        const d = document.createElement("div");
+        d.className = "option";
+        d.innerText = opt;
+        d.onclick = ()=>checkAnswer(d,i);
+        optDiv.appendChild(d);
+    });
+}
+
+function checkAnswer(selected,i){
+    const q = questions[index];
+    const opts = document.querySelectorAll(".option");
+
+    opts.forEach((o,idx)=>{
+        o.onclick = null;
+        if(idx === q.answer) o.classList.add("correct");
+    });
+
+    if(i !== q.answer) selected.classList.add("wrong");
+
+    document.getElementById("explanation").innerText = q.explanation;
+    document.getElementById("nextBtn").style.display = "inline-block";
+    document.getElementById("explainBtn").style.display = "inline-block";
+}
+
+function toggleExplanation(){
+    const e = document.getElementById("explanation");
+    e.style.display = e.style.display === "none" ? "block" : "none";
+}
+
+function nextQuestion(){
+    index++;
+    if(index < questions.length){
+        loadQuestion();
+    } else {
+        document.getElementById("card").innerHTML =
+        "<h2>🎉 Quiz Completed!</h2><p>You have finished Prepositions.</p>";
+    }
+}
+
+function prevQuestion(){
+    if(index > 0){
+        index--;
+        loadQuestion();
+    }
+}
+
+loadQuestion();
+</script>
+
+</body>
+</html>

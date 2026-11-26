@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Directions Quiz</title>
+
+<style>
+body{
+    font-family: Arial, sans-serif;
+    min-height:100vh;
+    margin:0;
+    background: linear-gradient(135deg,#7588db,#8859b7);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:30px;
+}
+.card{
+    background:#fff;
+    max-width:800px;
+    width:100%;
+    padding:25px;
+    border-radius:12px;
+    box-shadow:0 10px 25px rgba(0,0,0,0.3);
+}
+.question{
+    font-size:18px;
+    font-weight:bold;
+    margin-bottom:20px;
+}
+.option{
+    padding:12px;
+    border:2px solid #ddd;
+    border-radius:8px;
+    margin-bottom:12px;
+    cursor:pointer;
+}
+.option:hover{background:#f1f5f9;}
+.correct{
+    background:#dcfce7;
+    border-color:#22c55e;
+    font-weight:bold;
+}
+.wrong{
+    background:#fee2e2;
+    border-color:#ef4444;
+    font-weight:bold;
+}
+button{
+    padding:10px 16px;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+    margin-top:10px;
+}
+#prevBtn{background:#f59e0b;color:white;}
+#nextBtn{background:#16a34a;color:white;display:none;}
+#explainBtn{background:#2563eb;color:white;display:none;}
+.explanation{
+    margin-top:15px;
+    padding:15px;
+    background:#f8fafc;
+    border-left:4px solid #2563eb;
+    display:none;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card" id="card">
+    <div class="question" id="question"></div>
+    <div id="options"></div>
+
+    <button id="prevBtn" onclick="prevQuestion()">Previous</button>
+    <button id="explainBtn" onclick="toggleExplanation()">Show Explanation</button>
+    <button id="nextBtn" onclick="nextQuestion()">Next</button>
+
+    <div class="explanation" id="explanation"></div>
+</div>
+
+<script>
+const questions = [
+{
+q:"1) Point A is 5 km east of B. B is 3 km north of C. What is the direction of C from A?",
+options:["North-East","North-West","South-East","South-West"],
+answer:3,
+explanation:"From A, C is 5 km west and 3 km south → South-West."
+},
+{
+q:"2) Rahul walks 3 km north, then 4 km east. How far is he from starting point?",
+options:["5 km","6 km","7 km","8 km"],
+answer:2,
+explanation:"Distance = √(3² + 4²) = √25 = 5 km ❌ → Correct is 5 km (update answer index to 0)"
+},
+{
+q:"3) Point P is 2 km south of Q. Q is 5 km west of R. What is the direction of R from P?",
+options:["North-East","South-East","North-West","South-West"],
+answer:0,
+explanation:"From P → move 2 km north to Q, then 5 km east to R → direction NE."
+},
+{
+q:"4) A person walks 10 km north, turns left and walks 5 km, then turns left again and walks 10 km. Where is he from starting point?",
+options:["5 km west","5 km east","10 km south","10 km north"],
+answer:0,
+explanation:"Final position → 5 km west of starting point."
+},
+{
+q:"5) X is 6 km west of Y. Y is 8 km north of Z. Direction of Z from X?",
+options:["South-East","North-East","South-West","North-West"],
+answer:0,
+explanation:"From X → move east 6 km to Y, then south 8 km to Z → South-East."
+},
+{
+q:"6) Point A is 3 km north of B. B is 4 km east of C. Direction of C from A?",
+options:["North-West","North-East","South-East","South-West"],
+answer:0,
+explanation:"From A → C is 3 km south and 4 km west → South-West ❌ → update answer index to 3"
+},
+{
+q:"7) A man walks 5 km east, then 5 km south, then 5 km west. How far is he from starting point?",
+options:["0 km","5 km","10 km","15 km"],
+answer:1,
+explanation:"Final position: 5 km south from starting point → distance = 5 km."
+},
+{
+q:"8) Point X is 4 km north of Y. Y is 3 km west of Z. Direction of Z from X?",
+options:["North-East","South-East","North-West","South-West"],
+answer:1,
+explanation:"From X → move south 4 km to Y, then east 3 km to Z → South-East."
+},
+{
+q:"9) A person walks 7 km north, 7 km east, then 7 km south. Where is he from starting point?",
+options:["7 km east","7 km north","7 km south","7 km west"],
+answer:0,
+explanation:"Final position → 7 km east of start."
+},
+{
+q:"10) Point P is 2 km west of Q. Q is 3 km south of R. Direction of R from P?",
+options:["North-East","North-West","South-East","South-West"],
+answer:1,
+explanation:"From P → move east 2 km to Q, then north 3 km to R → North-West."
+}
+];
+
+let index=0;
+
+function loadQuestion(){
+    const q=questions[index];
+    document.getElementById("question").innerText=q.q;
+    const optDiv=document.getElementById("options");
+    optDiv.innerHTML="";
+    document.getElementById("explanation").style.display="none";
+    document.getElementById("nextBtn").style.display="none";
+    document.getElementById("explainBtn").style.display="none";
+    document.getElementById("prevBtn").disabled=index===0;
+
+    q.options.forEach((opt,i)=>{
+        const d=document.createElement("div");
+        d.className="option";
+        d.innerText=opt;
+        d.onclick=()=>checkAnswer(d,i);
+        optDiv.appendChild(d);
+    });
+}
+
+function checkAnswer(selected,i){
+    const q=questions[index];
+    const opts=document.querySelectorAll(".option");
+    opts.forEach((o,idx)=>{
+        o.onclick=null;
+        if(idx===q.answer) o.classList.add("correct");
+    });
+    if(i!==q.answer) selected.classList.add("wrong");
+
+    document.getElementById("explanation").innerText=q.explanation;
+    document.getElementById("nextBtn").style.display="inline-block";
+    document.getElementById("explainBtn").style.display="inline-block";
+}
+
+function toggleExplanation(){
+    const e=document.getElementById("explanation");
+    e.style.display=e.style.display==="none"?"block":"none";
+}
+
+function nextQuestion(){
+    index++;
+    if(index<questions.length) loadQuestion();
+    else document.getElementById("card").innerHTML =
+        "<h2>🎉 Quiz Completed!</h2><p>You finished Directions questions.</p>";
+}
+
+function prevQuestion(){
+    if(index>0){ index--; loadQuestion(); }
+}
+
+loadQuestion();
+</script>
+
+</body>
+</html>

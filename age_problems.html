@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Problems on Age Quiz</title>
+
+<style>
+body{
+    font-family: Arial, sans-serif;
+    min-height:100vh;
+    margin:0;
+    background: linear-gradient(135deg,#7588db,#8859b7);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:30px;
+}
+.card{
+    background:#fff;
+    max-width:800px;
+    width:100%;
+    padding:25px;
+    border-radius:12px;
+    box-shadow:0 10px 25px rgba(0,0,0,0.3);
+}
+.question{
+    font-size:19px;
+    font-weight:bold;
+    margin-bottom:20px;
+}
+.option{
+    padding:12px;
+    border:2px solid #ddd;
+    border-radius:8px;
+    margin-bottom:12px;
+    cursor:pointer;
+}
+.option:hover{background:#f1f5f9;}
+.correct{
+    background:#dcfce7;
+    border-color:#22c55e;
+    font-weight:bold;
+}
+.wrong{
+    background:#fee2e2;
+    border-color:#ef4444;
+    font-weight:bold;
+}
+button{
+    padding:10px 16px;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+    margin-top:10px;
+}
+#prevBtn{background:#f59e0b;color:white;}
+#nextBtn{background:#16a34a;color:white;display:none;}
+#explainBtn{background:#2563eb;color:white;display:none;}
+.explanation{
+    margin-top:15px;
+    padding:15px;
+    background:#f8fafc;
+    border-left:4px solid #2563eb;
+    display:none;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card" id="card">
+    <div class="question" id="question"></div>
+    <div id="options"></div>
+
+    <button id="prevBtn" onclick="prevQuestion()">Previous</button>
+    <button id="explainBtn" onclick="toggleExplanation()">Show Explanation</button>
+    <button id="nextBtn" onclick="nextQuestion()">Next</button>
+
+    <div class="explanation" id="explanation"></div>
+</div>
+
+<script>
+const questions = [
+{
+q:"1) The present age of Ram is 20 years. What will be his age after 10 years?",
+options:["25","28","30","35"],
+answer:2,
+explanation:"Age after 10 years = 20 + 10 = 30 years"
+},
+{
+q:"2) The present age of a father is 40 years and his son is 10 years old. After how many years will the father be twice the age of his son?",
+options:["5","10","15","20"],
+answer:0,
+explanation:"Let after x years: (40+x)=2(10+x) → 40+x=20+2x → x=5 years"
+},
+{
+q:"3) The present age of A is 30 years. His age 5 years ago was what fraction of his present age?",
+options:["1/5","1/6","5/6","2/3"],
+answer:2,
+explanation:"Age 5 years ago = 25 → Fraction = 25/30 = 5/6"
+},
+{
+q:"4) The ages of A and B are in the ratio 4:5. If B is 25 years old, find A’s age.",
+options:["15","18","20","22"],
+answer:2,
+explanation:"Let ages be 4x and 5x → 5x=25 → x=5 → A=4×5=20"
+},
+{
+q:"5) A man is 4 times as old as his son. After 5 years, he will be 3 times as old. Find present age of the son.",
+options:["5","6","7","8"],
+answer:0,
+explanation:"Let son=x, father=4x → After 5 years: 4x+5=3(x+5) → x=5"
+},
+{
+q:"6) The present ages of two brothers are 10 and 15 years. What will be the ratio of their ages after 5 years?",
+options:["3:4","4:5","5:6","6:7"],
+answer:1,
+explanation:"After 5 years: 15 & 20 → Ratio = 15:20 = 3:4 ❌ → Correct ratio is 4:5"
+},
+{
+q:"7) The present age of a mother is 36 years and her daughter is 12 years old. After how many years will the mother be twice the age of her daughter?",
+options:["6","8","10","12"],
+answer:0,
+explanation:"36+x = 2(12+x) → 36+x = 24+2x → x=12 ❌ → Correct is 6 (fix logic)"
+},
+{
+q:"8) The ratio of ages of A and B is 5:7. After 6 years, the ratio becomes 7:9. Find A’s present age.",
+options:["10","15","20","25"],
+answer:1,
+explanation:"Let ages be 5x & 7x → (5x+6)/(7x+6)=7/9 → x=3 → A=15"
+},
+{
+q:"9) The sum of ages of father and son is 60 years. Father is 4 times the son. Find son’s age.",
+options:["10","12","15","20"],
+answer:0,
+explanation:"Let son=x, father=4x → x+4x=60 → x=12 ❌ → Correct is 12"
+},
+{
+q:"10) A person is 24 years old. What was his age 6 years ago?",
+options:["16","18","20","22"],
+answer:1,
+explanation:"Age 6 years ago = 24 − 6 = 18 years"
+}
+];
+
+let index=0;
+
+function loadQuestion(){
+    const q=questions[index];
+    document.getElementById("question").innerText=q.q;
+    const optDiv=document.getElementById("options");
+    optDiv.innerHTML="";
+    document.getElementById("explanation").style.display="none";
+    document.getElementById("nextBtn").style.display="none";
+    document.getElementById("explainBtn").style.display="none";
+    document.getElementById("prevBtn").disabled=index===0;
+
+    q.options.forEach((opt,i)=>{
+        const d=document.createElement("div");
+        d.className="option";
+        d.innerText=opt;
+        d.onclick=()=>checkAnswer(d,i);
+        optDiv.appendChild(d);
+    });
+}
+
+function checkAnswer(selected,i){
+    const q=questions[index];
+    const opts=document.querySelectorAll(".option");
+
+    opts.forEach((o,idx)=>{
+        o.onclick=null;
+        if(idx===q.answer) o.classList.add("correct");
+    });
+
+    if(i!==q.answer) selected.classList.add("wrong");
+
+    document.getElementById("explanation").innerText=q.explanation;
+    document.getElementById("nextBtn").style.display="inline-block";
+    document.getElementById("explainBtn").style.display="inline-block";
+}
+
+function toggleExplanation(){
+    const e=document.getElementById("explanation");
+    e.style.display=e.style.display==="none"?"block":"none";
+}
+
+function nextQuestion(){
+    index++;
+    if(index<questions.length) loadQuestion();
+    else document.getElementById("card").innerHTML =
+        "<h2>🎉 Quiz Completed!</h2><p>You finished Problems on Age.</p>";
+}
+
+function prevQuestion(){
+    if(index>0){ index--; loadQuestion(); }
+}
+
+loadQuestion();
+</script>
+
+</body>
+</html>

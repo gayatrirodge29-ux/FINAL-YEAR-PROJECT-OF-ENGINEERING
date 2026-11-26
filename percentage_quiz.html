@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Percentage Aptitude Quiz</title>
+
+<style>
+body{
+    font-family: Arial, sans-serif;
+    min-height:100vh;
+    margin:0;
+    background: linear-gradient(135deg,#7588db,#8859b7);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:30px;
+}
+.card{
+    background:#fff;
+    max-width:800px;
+    width:100%;
+    padding:25px;
+    border-radius:12px;
+    box-shadow:0 10px 25px rgba(0,0,0,0.3);
+    animation:fadeIn 0.6s ease;
+}
+@keyframes fadeIn{
+    from{opacity:0;transform:translateY(20px);}
+    to{opacity:1;transform:translateY(0);}
+}
+.question{
+    font-size:19px;
+    font-weight:bold;
+    margin-bottom:20px;
+}
+.option{
+    padding:12px;
+    border:2px solid #ddd;
+    border-radius:8px;
+    margin-bottom:12px;
+    cursor:pointer;
+    transition:0.3s;
+}
+.option:hover{
+    background:#f1f5f9;
+}
+.correct{
+    background:#dcfce7;
+    border-color:#22c55e;
+    font-weight:bold;
+}
+.wrong{
+    background:#fee2e2;
+    border-color:#ef4444;
+    font-weight:bold;
+}
+button{
+    padding:10px 16px;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+    margin-top:10px;
+}
+#prevBtn{background:#f59e0b;color:white;}
+#nextBtn{background:#16a34a;color:white;display:none;}
+#explainBtn{background:#2563eb;color:white;display:none;}
+.explanation{
+    margin-top:15px;
+    padding:15px;
+    background:#f8fafc;
+    border-left:4px solid #2563eb;
+    display:none;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card" id="card">
+    <div class="question" id="question"></div>
+    <div id="options"></div>
+
+    <button id="prevBtn" onclick="prevQuestion()">Previous</button>
+    <button id="explainBtn" onclick="toggleExplanation()">Show Explanation</button>
+    <button id="nextBtn" onclick="nextQuestion()">Next</button>
+
+    <div class="explanation" id="explanation"></div>
+</div>
+
+<script>
+const questions = [
+{
+q:"1) What is 20% of 150?",
+options:["20","25","30","35"],
+answer:2,
+explanation:"20% of 150 = (20/100) × 150 = 30"
+},
+{
+q:"2) 25% of a number is 50. What is the number?",
+options:["150","200","250","300"],
+answer:1,
+explanation:"Number = 50 × (100/25) = 200"
+},
+{
+q:"3) Increase 200 by 10%",
+options:["210","215","220","225"],
+answer:2,
+explanation:"10% of 200 = 20 → 200 + 20 = 220"
+},
+{
+q:"4) Decrease 500 by 20%",
+options:["350","375","400","450"],
+answer:2,
+explanation:"20% of 500 = 100 → 500 − 100 = 400"
+},
+{
+q:"5) What percent of 50 is 10?",
+options:["10%","15%","20%","25%"],
+answer:2,
+explanation:"(10/50) × 100 = 20%"
+},
+{
+q:"6) If price increases from 100 to 120, find % increase",
+options:["10%","15%","20%","25%"],
+answer:2,
+explanation:"Increase = 20 → (20/100)×100 = 20%"
+},
+{
+q:"7) If price decreases from 200 to 150, find % decrease",
+options:["20%","25%","30%","35%"],
+answer:1,
+explanation:"Decrease = 50 → (50/200)×100 = 25%"
+},
+{
+q:"8) 40% of a number is 80. Find the number.",
+options:["160","180","200","240"],
+answer:2,
+explanation:"Number = 80 × (100/40) = 200"
+},
+{
+q:"9) What is 15% of 300?",
+options:["30","35","40","45"],
+answer:3,
+explanation:"(15/100) × 300 = 45"
+},
+{
+q:"10) A student scores 360 out of 450. Find percentage.",
+options:["75%","80%","85%","90%"],
+answer:1,
+explanation:"(360/450)×100 = 80%"
+},
+{
+q:"11) 10% of a number is 25. Find the number.",
+options:["200","250","300","350"],
+answer:1,
+explanation:"Number = 25 × 10 = 250"
+},
+{
+q:"12) 50 is what percent of 400?",
+options:["10%","12.5%","15%","20%"],
+answer:1,
+explanation:"(50/400)×100 = 12.5%"
+},
+{
+q:"13) Increase 80 by 25%",
+options:["90","95","100","105"],
+answer:2,
+explanation:"25% of 80 = 20 → 80 + 20 = 100"
+},
+{
+q:"14) Decrease 120 by 10%",
+options:["100","105","108","110"],
+answer:2,
+explanation:"10% of 120 = 12 → 120 − 12 = 108"
+},
+{
+q:"15) If salary increases from 5000 to 5500, % increase?",
+options:["5%","8%","10%","12%"],
+answer:2,
+explanation:"Increase = 500 → (500/5000)×100 = 10%"
+}
+];
+
+let index = 0;
+
+function loadQuestion(){
+    const q = questions[index];
+    document.getElementById("question").innerText = q.q;
+    const optDiv = document.getElementById("options");
+    optDiv.innerHTML = "";
+    document.getElementById("explanation").style.display="none";
+    document.getElementById("nextBtn").style.display="none";
+    document.getElementById("explainBtn").style.display="none";
+    document.getElementById("prevBtn").disabled = index === 0;
+
+    q.options.forEach((opt,i)=>{
+        const d = document.createElement("div");
+        d.className="option";
+        d.innerText=opt;
+        d.onclick=()=>checkAnswer(d,i);
+        optDiv.appendChild(d);
+    });
+}
+
+function checkAnswer(selected,i){
+    const q = questions[index];
+    const opts = document.querySelectorAll(".option");
+
+    opts.forEach((o,idx)=>{
+        o.onclick=null;
+        if(idx===q.answer) o.classList.add("correct");
+    });
+
+    if(i!==q.answer) selected.classList.add("wrong");
+
+    document.getElementById("explanation").innerText=q.explanation;
+    document.getElementById("nextBtn").style.display="inline-block";
+    document.getElementById("explainBtn").style.display="inline-block";
+}
+
+function toggleExplanation(){
+    const e=document.getElementById("explanation");
+    e.style.display = e.style.display==="none" ? "block" : "none";
+}
+
+function nextQuestion(){
+    index++;
+    if(index < questions.length) loadQuestion();
+    else document.getElementById("card").innerHTML =
+        "<h2>🎉 Quiz Completed!</h2><p>You finished all Percentage questions.</p>";
+}
+
+function prevQuestion(){
+    if(index>0){ index--; loadQuestion(); }
+}
+
+loadQuestion();
+</script>
+
+</body>
+</html>

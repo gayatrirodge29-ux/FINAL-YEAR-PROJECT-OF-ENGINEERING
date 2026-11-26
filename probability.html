@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Probability Quiz</title>
+
+<style>
+body{
+    font-family: Arial, sans-serif;
+    min-height:100vh;
+    margin:0;
+    background: linear-gradient(135deg,#7588db,#8859b7);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:30px;
+}
+.card{
+    background:#fff;
+    max-width:800px;
+    width:100%;
+    padding:25px;
+    border-radius:12px;
+    box-shadow:0 10px 25px rgba(0,0,0,0.3);
+}
+.question{
+    font-size:19px;
+    font-weight:bold;
+    margin-bottom:20px;
+}
+.option{
+    padding:12px;
+    border:2px solid #ddd;
+    border-radius:8px;
+    margin-bottom:12px;
+    cursor:pointer;
+}
+.option:hover{background:#f1f5f9;}
+.correct{
+    background:#dcfce7;
+    border-color:#22c55e;
+    font-weight:bold;
+}
+.wrong{
+    background:#fee2e2;
+    border-color:#ef4444;
+    font-weight:bold;
+}
+button{
+    padding:10px 16px;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+    margin-top:10px;
+}
+#prevBtn{background:#f59e0b;color:white;}
+#nextBtn{background:#16a34a;color:white;display:none;}
+#explainBtn{background:#2563eb;color:white;display:none;}
+.explanation{
+    margin-top:15px;
+    padding:15px;
+    background:#f8fafc;
+    border-left:4px solid #2563eb;
+    display:none;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card" id="card">
+    <div class="question" id="question"></div>
+    <div id="options"></div>
+
+    <button id="prevBtn" onclick="prevQuestion()">Previous</button>
+    <button id="explainBtn" onclick="toggleExplanation()">Show Explanation</button>
+    <button id="nextBtn" onclick="nextQuestion()">Next</button>
+
+    <div class="explanation" id="explanation"></div>
+</div>
+
+<script>
+const questions = [
+{
+q:"1) A die is rolled. Probability of getting a 4?",
+options:["1/6","1/3","1/4","1/2"],
+answer:0,
+explanation:"A die has 6 faces. Only one face shows 4. Probability = 1/6"
+},
+{
+q:"2) Two coins are tossed. Probability of 2 heads?",
+options:["1/4","1/2","1/3","1/6"],
+answer:0,
+explanation:"Sample space: HH, HT, TH, TT → Only HH is favorable → 1/4"
+},
+{
+q:"3) Bag contains 5 red, 3 blue balls. Probability of picking blue?",
+options:["3/5","3/8","3/4","5/8"],
+answer:1,
+explanation:"Total balls = 5+3=8. Favorable =3 → Probability = 3/8"
+},
+{
+q:"4) A card is drawn from a deck. Probability of King?",
+options:["1/13","1/12","1/4","1/52"],
+answer:0,
+explanation:"52 cards, 4 Kings → Probability = 4/52 = 1/13"
+},
+{
+q:"5) A bag has 2 white, 3 black balls. One ball picked. Probability of white?",
+options:["1/5","2/5","3/5","2/3"],
+answer:1,
+explanation:"Favorable=2, total=5 → Probability=2/5"
+},
+{
+q:"6) A die is rolled. Probability of even number?",
+options:["1/2","1/3","2/3","1/6"],
+answer:0,
+explanation:"Even numbers = 2,4,6 → 3/6 = 1/2"
+},
+{
+q:"7) A card drawn from 52. Probability of heart?",
+options:["1/4","1/3","1/2","1/13"],
+answer:0,
+explanation:"13 hearts out of 52 → 13/52 = 1/4"
+},
+{
+q:"8) Two dice rolled. Probability sum=7?",
+options:["1/6","1/12","1/8","1/9"],
+answer:0,
+explanation:"Favorable: (1,6),(2,5),(3,4),(4,3),(5,2),(6,1)=6/36=1/6"
+},
+{
+q:"9) Bag: 4 red, 6 black. Probability red?",
+options:["2/5","1/2","3/5","1/4"],
+answer:0,
+explanation:"Total=10, red=4 → Probability=4/10=2/5"
+},
+{
+q:"10) Coin tossed thrice. Probability 1 head?",
+options:["1/2","3/8","1/3","1/4"],
+answer:1,
+explanation:"Sample space size=8. Favorable: HTT,THT,TTH=3 → 3/8"
+}
+];
+
+let index=0;
+
+function loadQuestion(){
+    const q=questions[index];
+    document.getElementById("question").innerText=q.q;
+    const optDiv=document.getElementById("options");
+    optDiv.innerHTML="";
+    document.getElementById("explanation").style.display="none";
+    document.getElementById("nextBtn").style.display="none";
+    document.getElementById("explainBtn").style.display="none";
+    document.getElementById("prevBtn").disabled=index===0;
+
+    q.options.forEach((opt,i)=>{
+        const d=document.createElement("div");
+        d.className="option";
+        d.innerText=opt;
+        d.onclick=()=>checkAnswer(d,i);
+        optDiv.appendChild(d);
+    });
+}
+
+function checkAnswer(selected,i){
+    const q=questions[index];
+    const opts=document.querySelectorAll(".option");
+
+    opts.forEach((o,idx)=>{
+        o.onclick=null;
+        if(idx===q.answer) o.classList.add("correct");
+    });
+
+    if(i!==q.answer) selected.classList.add("wrong");
+
+    document.getElementById("explanation").innerText=q.explanation;
+    document.getElementById("nextBtn").style.display="inline-block";
+    document.getElementById("explainBtn").style.display="inline-block";
+}
+
+function toggleExplanation(){
+    const e=document.getElementById("explanation");
+    e.style.display=e.style.display==="none"?"block":"none";
+}
+
+function nextQuestion(){
+    index++;
+    if(index<questions.length) loadQuestion();
+    else document.getElementById("card").innerHTML =
+        "<h2>🎉 Quiz Completed!</h2><p>You finished Probability questions.</p>";
+}
+
+function prevQuestion(){
+    if(index>0){ index--; loadQuestion(); }
+}
+
+loadQuestion();
+</script>
+
+</body>
+</html>

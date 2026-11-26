@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Recursion Quiz</title>
+
+<style>
+body{
+    font-family: Arial, sans-serif;
+    min-height:100vh;
+    margin:0;
+    background: linear-gradient(135deg,#7588db,#8859b7);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:30px;
+}
+.card{
+    background:#fff;
+    max-width:900px;
+    width:100%;
+    padding:25px;
+    border-radius:12px;
+    box-shadow:0 10px 25px rgba(0,0,0,0.3);
+}
+.question{
+    font-size:18px;
+    font-weight:bold;
+    margin-bottom:18px;
+    white-space:pre-line;
+}
+.option{
+    padding:12px;
+    border:2px solid #ddd;
+    border-radius:8px;
+    margin-bottom:12px;
+    cursor:pointer;
+}
+.option:hover{background:#f1f5f9;}
+.correct{
+    background:#dcfce7;
+    border-color:#22c55e;
+    font-weight:bold;
+}
+.wrong{
+    background:#fee2e2;
+    border-color:#ef4444;
+    font-weight:bold;
+}
+button{
+    padding:10px 16px;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+    margin-top:10px;
+}
+#prevBtn{background:#f59e0b;color:white;}
+#nextBtn{background:#16a34a;color:white;display:none;}
+#explainBtn{background:#2563eb;color:white;display:none;}
+.explanation{
+    margin-top:15px;
+    padding:15px;
+    background:#f8fafc;
+    border-left:4px solid #2563eb;
+    display:none;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card" id="card">
+    <div class="question" id="question"></div>
+    <div id="options"></div>
+
+    <button id="prevBtn" onclick="prevQuestion()">Previous</button>
+    <button id="explainBtn" onclick="toggleExplanation()">Show Explanation</button>
+    <button id="nextBtn" onclick="nextQuestion()">Next</button>
+
+    <div class="explanation" id="explanation"></div>
+</div>
+
+<script>
+const questions = [
+{
+q:`1) What is recursion in programming?`,
+options:["Function calling itself","Function calling another function","Loop inside function","None of these"],
+answer:0,
+explanation:"Recursion is when a function calls itself directly or indirectly."
+},
+{
+q:`2) Which is a base case in recursion?`,
+options:["Case that calls recursion","Case that stops recursion","Case inside loop","None"],
+answer:1,
+explanation:"Base case is the condition that stops further recursive calls."
+},
+{
+q:`3) What will this function print?\nvoid f(){\n f();\n}\nf();`,
+options:["Nothing","Infinite loop","Runtime error/Stack overflow","1"],
+answer:2,
+explanation:"No base case leads to infinite recursion causing stack overflow."
+},
+{
+q:`4) Factorial of n using recursion: which is correct?\n`,
+options:["factorial(n)=n*factorial(n-1)","factorial(n)=n+factorial(n-1)","factorial(n)=factorial(n-1)","factorial(n)=n/factorial(n-1)"],
+answer:0,
+explanation:"Factorial formula: n! = n × (n−1)!"
+},
+{
+q:`5) Fibonacci sequence recursively: f(n)=?`,
+options:["f(n)=f(n-1)+f(n-2)","f(n)=n+f(n-1)","f(n)=f(n-1)*f(n-2)","f(n)=n*f(n-1)"],
+answer:0,
+explanation:"Recursive Fibonacci: f(n) = f(n-1) + f(n-2)"
+},
+{
+q:`6) What is output?\ndef recur(n):\n if n==0:\n  return\n print(n)\n recur(n-1)\nrecur(3)`,
+options:["3 2 1 0","3 2 1","0 1 2 3","Error"],
+answer:1,
+explanation:"Prints 3,2,1. Base case stops at n==0."
+},
+{
+q:`7) Which problem is naturally solved using recursion?`,
+options:["Binary tree traversal","Looping through array","Simple arithmetic","All"],
+answer:0,
+explanation:"Binary trees are naturally recursive structures."
+},
+{
+q:`8) What is tail recursion?`,
+options:["Recursion without return","Recursion where last action is recursive call","Recursion with loop","None"],
+answer:1,
+explanation:"Tail recursion is when the last statement in function is the recursive call."
+},
+{
+q:`9) Which can be an issue with recursion?`,
+options:["Stack overflow","Memory leak","Compile error","All"],
+answer:0,
+explanation:"Deep recursion without base case may cause stack overflow."
+},
+{
+q:`10) Output?\ndef sum(n):\n if n==0: return 0\n return n+sum(n-1)\nprint(sum(4))`,
+options:["10","4","24","Error"],
+answer:0,
+explanation:"sum(4)=4+3+2+1+0=10"
+}
+];
+
+let index = 0;
+
+function loadQuestion(){
+    const q = questions[index];
+    document.getElementById("question").innerText = q.q;
+    const optDiv = document.getElementById("options");
+    optDiv.innerHTML="";
+    document.getElementById("explanation").style.display="none";
+    document.getElementById("nextBtn").style.display="none";
+    document.getElementById("explainBtn").style.display="none";
+    document.getElementById("prevBtn").disabled=index===0;
+
+    q.options.forEach((opt,i)=>{
+        const d=document.createElement("div");
+        d.className="option";
+        d.innerText=opt;
+        d.onclick=()=>checkAnswer(d,i);
+        optDiv.appendChild(d);
+    });
+}
+
+function checkAnswer(selected,i){
+    const q = questions[index];
+    const opts = document.querySelectorAll(".option");
+
+    opts.forEach((o,idx)=>{
+        o.onclick=null;
+        if(idx===q.answer) o.classList.add("correct");
+    });
+
+    if(i!==q.answer) selected.classList.add("wrong");
+
+    document.getElementById("explanation").innerText=q.explanation;
+    document.getElementById("nextBtn").style.display="inline-block";
+    document.getElementById("explainBtn").style.display="inline-block";
+}
+
+function toggleExplanation(){
+    const e=document.getElementById("explanation");
+    e.style.display=e.style.display==="none"?"block":"none";
+}
+
+function nextQuestion(){
+    index++;
+    if(index<questions.length) loadQuestion();
+    else document.getElementById("card").innerHTML =
+        "<h2>🎉 Quiz Completed!</h2><p>You finished Recursion questions.</p>";
+}
+
+function prevQuestion(){
+    if(index>0){ index--; loadQuestion(); }
+}
+
+loadQuestion();
+</script>
+
+</body>
+</html>

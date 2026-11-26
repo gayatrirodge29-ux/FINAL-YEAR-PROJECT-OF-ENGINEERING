@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Change of Speech Quiz</title>
+
+<style>
+body{
+    margin:0;
+    min-height:100vh;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg,#7588db,#8859b7);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:30px;
+}
+.card{
+    background:#ffffff;
+    max-width:900px;
+    width:100%;
+    padding:25px;
+    border-radius:14px;
+    box-shadow:0 15px 30px rgba(0,0,0,0.3);
+}
+.question{
+    font-size:18px;
+    font-weight:bold;
+    margin-bottom:18px;
+}
+.option{
+    padding:12px;
+    border:2px solid #e5e7eb;
+    border-radius:8px;
+    margin-bottom:12px;
+    cursor:pointer;
+}
+.option:hover{background:#f9fafb;}
+.correct{
+    background:#dcfce7;
+    border-color:#22c55e;
+    font-weight:bold;
+}
+.wrong{
+    background:#fee2e2;
+    border-color:#ef4444;
+    font-weight:bold;
+}
+button{
+    padding:10px 16px;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+    margin-top:12px;
+}
+#prevBtn{background:#f59e0b;color:#fff;}
+#nextBtn{background:#16a34a;color:#fff;display:none;}
+#explainBtn{background:#2563eb;color:#fff;display:none;}
+.explanation{
+    margin-top:15px;
+    padding:15px;
+    background:#f1f5f9;
+    border-left:4px solid #2563eb;
+    display:none;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card" id="card">
+    <div class="question" id="question"></div>
+    <div id="options"></div>
+
+    <button id="prevBtn" onclick="prevQuestion()">Previous</button>
+    <button id="explainBtn" onclick="toggleExplanation()">Show Explanation</button>
+    <button id="nextBtn" onclick="nextQuestion()">Next</button>
+
+    <div class="explanation" id="explanation"></div>
+</div>
+
+<script>
+const questions = [
+{
+q:"1) He said, \"I am busy.\"",
+options:[
+"He said that he is busy.",
+"He said that he was busy.",
+"He says that he was busy.",
+"He said he busy."
+],
+answer:1,
+explanation:"Present tense changes to past tense in indirect speech → am → was."
+},
+{
+q:"2) She said, \"I have finished my work.\"",
+options:[
+"She said that she finished her work.",
+"She said that she has finished her work.",
+"She said that she had finished her work.",
+"She says she finished her work."
+],
+answer:2,
+explanation:"Present perfect → past perfect → have finished → had finished."
+},
+{
+q:"3) He said to me, \"I will help you.\"",
+options:[
+"He said that he will help me.",
+"He said to me that he would help me.",
+"He said that he would help me.",
+"He told me that he will help me."
+],
+answer:2,
+explanation:"Will → would and 'said to' → 'said/told'."
+},
+{
+q:"4) She said, \"I can solve this problem.\"",
+options:[
+"She said that she can solve that problem.",
+"She said that she could solve that problem.",
+"She says she could solve this problem.",
+"She said she solve the problem."
+],
+answer:1,
+explanation:"Can → could in indirect speech."
+},
+{
+q:"5) He said, \"We are going home.\"",
+options:[
+"He said that they were going home.",
+"He said that we are going home.",
+"He said that they are going home.",
+"He said that we were going home."
+],
+answer:0,
+explanation:"Pronoun changes and are → were."
+},
+{
+q:"6) She said to him, \"Do you like tea?\"",
+options:[
+"She asked him if he liked tea.",
+"She asked him do he like tea.",
+"She said if he liked tea.",
+"She told him that he liked tea."
+],
+answer:0,
+explanation:"Yes/No question → asked + if/whether."
+},
+{
+q:"7) The teacher said, \"The sun rises in the east.\"",
+options:[
+"The teacher said that the sun rose in the east.",
+"The teacher said that the sun rises in the east.",
+"The teacher said the sun rising in east.",
+"The teacher says that sun rose in east."
+],
+answer:1,
+explanation:"Universal truth → tense does not change."
+},
+{
+q:"8) He said, \"Open the door.\"",
+options:[
+"He ordered to open the door.",
+"He said that open the door.",
+"He ordered me to open the door.",
+"He asked that I open the door."
+],
+answer:2,
+explanation:"Imperative sentence → ordered/asked + to + verb."
+},
+{
+q:"9) She said, \"Please help me.\"",
+options:[
+"She begged me to help her.",
+"She ordered me to help her.",
+"She asked me help her.",
+"She told me please help her."
+],
+answer:0,
+explanation:"'Please' indicates request → begged/asked."
+},
+{
+q:"10) He said, \"I may come tomorrow.\"",
+options:[
+"He said that he might come the next day.",
+"He said that he may come tomorrow.",
+"He said he might come tomorrow.",
+"He said that he comes next day."
+],
+answer:0,
+explanation:"May → might, tomorrow → the next day."
+}
+];
+
+let index = 0;
+
+function loadQuestion(){
+    const q = questions[index];
+    document.getElementById("question").innerText = q.q;
+    const optDiv = document.getElementById("options");
+    optDiv.innerHTML = "";
+
+    document.getElementById("explanation").style.display = "none";
+    document.getElementById("nextBtn").style.display = "none";
+    document.getElementById("explainBtn").style.display = "none";
+    document.getElementById("prevBtn").disabled = index === 0;
+
+    q.options.forEach((opt,i)=>{
+        const d = document.createElement("div");
+        d.className = "option";
+        d.innerText = opt;
+        d.onclick = ()=>checkAnswer(d,i);
+        optDiv.appendChild(d);
+    });
+}
+
+function checkAnswer(selected,i){
+    const q = questions[index];
+    const opts = document.querySelectorAll(".option");
+
+    opts.forEach((o,idx)=>{
+        o.onclick = null;
+        if(idx === q.answer) o.classList.add("correct");
+    });
+
+    if(i !== q.answer) selected.classList.add("wrong");
+
+    document.getElementById("explanation").innerText = q.explanation;
+    document.getElementById("nextBtn").style.display = "inline-block";
+    document.getElementById("explainBtn").style.display = "inline-block";
+}
+
+function toggleExplanation(){
+    const e = document.getElementById("explanation");
+    e.style.display = e.style.display === "none" ? "block" : "none";
+}
+
+function nextQuestion(){
+    index++;
+    if(index < questions.length){
+        loadQuestion();
+    } else {
+        document.getElementById("card").innerHTML =
+        "<h2>🎉 Quiz Completed!</h2><p>You have finished Change of Speech.</p>";
+    }
+}
+
+function prevQuestion(){
+    if(index > 0){
+        index--;
+        loadQuestion();
+    }
+}
+
+loadQuestion();
+</script>
+
+</body>
+</html>

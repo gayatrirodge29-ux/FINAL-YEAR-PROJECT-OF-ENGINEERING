@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Statement and Assumption Quiz</title>
+<style>
+body{
+    font-family: Arial, sans-serif;
+    min-height:100vh;
+    margin:0;
+    background: linear-gradient(135deg,#7588db,#8859b7);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:30px;
+}
+.card{
+    background:#fff;
+    max-width:850px;
+    width:100%;
+    padding:25px;
+    border-radius:12px;
+    box-shadow:0 10px 25px rgba(0,0,0,0.3);
+    animation:fadeIn 0.6s ease;
+}
+@keyframes fadeIn{
+    from{opacity:0;transform:translateY(20px);}    
+    to{opacity:1;transform:translateY(0);}    
+}
+.question{font-size:18px;font-weight:bold;margin-bottom:20px;}
+.option{
+    padding:12px;
+    border:2px solid #ddd;
+    border-radius:8px;
+    margin-bottom:12px;
+    cursor:pointer;
+    transition:0.3s;
+}
+.option:hover{background:#f1f5f9;}
+.correct{background:#dcfce7;border-color:#22c55e;font-weight:bold;}
+.wrong{background:#fee2e2;border-color:#ef4444;font-weight:bold;}
+button{
+    padding:10px 16px;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+    margin-top:10px;
+}
+#prevBtn{background:#f59e0b;color:white;}
+#nextBtn{background:#16a34a;color:white;display:none;}
+#explainBtn{background:#2563eb;color:white;display:none;}
+.explanation{
+    margin-top:15px;
+    padding:15px;
+    background:#f8fafc;
+    border-left:4px solid #2563eb;
+    display:none;
+}
+</style>
+</head>
+<body>
+<div class="card" id="card">
+    <div class="question" id="question"></div>
+    <div id="options"></div>
+    <button id="prevBtn" onclick="prevQuestion()">Previous</button>
+    <button id="explainBtn" onclick="toggleExplanation()">Show Explanation</button>
+    <button id="nextBtn" onclick="nextQuestion()">Next</button>
+    <div class="explanation" id="explanation"></div>
+</div>
+<script>
+const questions=[
+{
+q:"1) Statement: The government has decided to increase the petrol prices.\nAssumptions:\nI. The increase in petrol price will reduce consumption.\nII. The government wants to increase its revenue.",
+options:["Only I","Only II","Both I and II","Neither I nor II"],
+answer:2,
+explanation:"Price hike assumes reduced consumption and revenue increase. Both assumptions are implicit."
+},
+{
+q:"2) Statement: Schools should introduce online classes.\nAssumptions:\nI. Students have access to the internet.\nII. Online classes are effective.",
+options:["Only I","Only II","Both I and II","Neither I nor II"],
+answer:2,
+explanation:"Online classes assume internet access and effectiveness."
+},
+{
+q:"3) Statement: The company has increased salaries to retain employees.\nAssumptions:\nI. Salary increase motivates employees.\nII. Employees are dissatisfied.",
+options:["Only I","Only II","Both I and II","Neither I nor II"],
+answer:2,
+explanation:"Retention assumes salary motivates and dissatisfaction existed."
+},
+{
+q:"4) Statement: A warning was issued about heavy rainfall.\nAssumptions:\nI. Heavy rainfall can cause damage.\nII. People will take precautions.",
+options:["Only I","Only II","Both I and II","Neither I nor II"],
+answer:2,
+explanation:"Warnings assume danger and preventive action."
+},
+{
+q:"5) Statement: Banks are encouraging digital payments.\nAssumptions:\nI. Digital payments are convenient.\nII. Customers are willing to adapt.",
+options:["Only I","Only II","Both I and II","Neither I nor II"],
+answer:2,
+explanation:"Encouragement assumes convenience and adaptability."
+},
+{
+q:"6) Statement: The city installed CCTV cameras to reduce crime.\nAssumptions:\nI. CCTV deters criminals.\nII. Crime rate is high.",
+options:["Only I","Only II","Both I and II","Neither I nor II"],
+answer:2,
+explanation:"Crime control assumes deterrence and existing crime problem."
+},
+{
+q:"7) Statement: The teacher advised students to revise daily.\nAssumptions:\nI. Revision improves performance.\nII. Students have enough time.",
+options:["Only I","Only II","Both I and II","Neither I nor II"],
+answer:0,
+explanation:"Only improvement is assumed; time availability is not necessarily assumed."
+},
+{
+q:"8) Statement: The road was widened to reduce traffic congestion.\nAssumptions:\nI. Wider roads reduce congestion.\nII. Traffic volume is high.",
+options:["Only I","Only II","Both I and II","Neither I nor II"],
+answer:2,
+explanation:"Congestion reduction assumes both wider road effectiveness and traffic problem."
+},
+{
+q:"9) Statement: The company launched a new product to increase sales.\nAssumptions:\nI. New products attract customers.\nII. Existing sales are low.",
+options:["Only I","Only II","Both I and II","Neither I nor II"],
+answer:0,
+explanation:"New product attraction is assumed; low sales are not necessarily implied."
+},
+{
+q:"10) Statement: Parents should limit children's screen time.\nAssumptions:\nI. Excessive screen time is harmful.\nII. Parents can control usage.",
+options:["Only I","Only II","Both I and II","Neither I nor II"],
+answer:2,
+explanation:"Limiting assumes harm and parental control."
+}
+];
+let index=0;
+function loadQuestion(){
+ const q=questions[index];
+ document.getElementById("question").innerText=q.q;
+ const optDiv=document.getElementById("options");
+ optDiv.innerHTML="";
+ document.getElementById("explanation").style.display="none";
+ document.getElementById("nextBtn").style.display="none";
+ document.getElementById("explainBtn").style.display="none";
+ document.getElementById("prevBtn").disabled=index===0;
+ q.options.forEach((opt,i)=>{
+  const d=document.createElement("div");
+  d.className="option";
+  d.innerText=opt;
+  d.onclick=()=>checkAnswer(d,i);
+  optDiv.appendChild(d);
+ });
+}
+function checkAnswer(selected,i){
+ const q=questions[index];
+ const opts=document.querySelectorAll('.option');
+ opts.forEach((o,idx)=>{o.onclick=null;if(idx===q.answer)o.classList.add('correct');});
+ if(i!==q.answer)selected.classList.add('wrong');
+ document.getElementById('explanation').innerText=q.explanation;
+ document.getElementById('nextBtn').style.display='inline-block';
+ document.getElementById('explainBtn').style.display='inline-block';
+}
+function toggleExplanation(){
+ const e=document.getElementById('explanation');
+ e.style.display=e.style.display==='none'?'block':'none';
+}
+function nextQuestion(){
+ index++;
+ if(index<questions.length)loadQuestion();
+ else document.getElementById('card').innerHTML='<h2>🎉 Quiz Completed!</h2>';
+}
+function prevQuestion(){if(index>0){index--;loadQuestion();}}
+loadQuestion();
+</script>
+</body>
+</html>

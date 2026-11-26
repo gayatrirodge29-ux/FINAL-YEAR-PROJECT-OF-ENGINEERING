@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Work & Wages Quiz</title>
+
+<style>
+body{
+    font-family: Arial, sans-serif;
+    min-height:100vh;
+    margin:0;
+    background: linear-gradient(135deg,#7588db,#8859b7);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:30px;
+}
+.card{
+    background:#fff;
+    max-width:800px;
+    width:100%;
+    padding:25px;
+    border-radius:12px;
+    box-shadow:0 10px 25px rgba(0,0,0,0.3);
+}
+.question{
+    font-size:19px;
+    font-weight:bold;
+    margin-bottom:20px;
+}
+.option{
+    padding:12px;
+    border:2px solid #ddd;
+    border-radius:8px;
+    margin-bottom:12px;
+    cursor:pointer;
+}
+.option:hover{background:#f1f5f9;}
+.correct{
+    background:#dcfce7;
+    border-color:#22c55e;
+    font-weight:bold;
+}
+.wrong{
+    background:#fee2e2;
+    border-color:#ef4444;
+    font-weight:bold;
+}
+button{
+    padding:10px 16px;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+    margin-top:10px;
+}
+#prevBtn{background:#f59e0b;color:white;}
+#nextBtn{background:#16a34a;color:white;display:none;}
+#explainBtn{background:#2563eb;color:white;display:none;}
+.explanation{
+    margin-top:15px;
+    padding:15px;
+    background:#f8fafc;
+    border-left:4px solid #2563eb;
+    display:none;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card" id="card">
+    <div class="question" id="question"></div>
+    <div id="options"></div>
+
+    <button id="prevBtn" onclick="prevQuestion()">Previous</button>
+    <button id="explainBtn" onclick="toggleExplanation()">Show Explanation</button>
+    <button id="nextBtn" onclick="nextQuestion()">Next</button>
+
+    <div class="explanation" id="explanation"></div>
+</div>
+
+<script>
+const questions = [
+{
+q:"1) A can do a piece of work in 12 days, B in 16 days. Both together complete the work in?",
+options:["6 days","7 days","8 days","9 days"],
+answer:2,
+explanation:"A's 1 day work = 1/12, B's 1 day work = 1/16 → Together = 1/12 + 1/16 = 7/48 → Time = 48/7 ≈ 6.86 ≈ 7 days"
+},
+{
+q:"2) A, B and C can do a work in 6, 8 and 12 days respectively. A and B work together for 2 days. Remaining work is done by C. Total days?",
+options:["3","4","5","6"],
+answer:3,
+explanation:"A+ B 1 day work = 1/6+1/8=7/24, 2 days=14/24=7/12 done, remaining=5/12, C=1/12/day → 5/12 ÷ 1/12 =5/1=5 days? Check: C=12 days work 1 day=1/12, remaining=5/12 → 5 days"
+},
+{
+q:"3) A alone can do a work in 10 days, B alone in 15 days. They work on alternate days starting with A. How many days to complete?",
+options:["8","9","10","11"],
+answer:2,
+explanation:"1 cycle(2 days)=A+B work=1/10+1/15=1/6/day → 5 cycles=5×1/6=5/6, remaining 1/6 done by A next day → total 11 days"
+},
+{
+q:"4) 3 men can do a work in 12 days. How many men are required to finish in 8 days?",
+options:["4","5","6","3"],
+answer:2,
+explanation:"Work=3×12=36 man-days → 36/8=4.5 ≈5 men"
+},
+{
+q:"5) A does 60% of a work, B does remaining in 6 days. B alone completes same work in?",
+options:["10 days","12 days","15 days","18 days"],
+answer:2,
+explanation:"Remaining work=40%, B 6 days → 40%=6 days → 100% =6×100/40=15 days"
+},
+{
+q:"6) 5 men can do a work in 20 days. 10 men in?",
+options:["8","10","12","15"],
+answer:1,
+explanation:"Work=5×20=100 man-days → 10 men=100/10=10 days"
+},
+{
+q:"7) A works 1/3 of work in 4 days. How many days for whole work?",
+options:["10","12","14","16"],
+answer:1,
+explanation:"1/3 work=4 days → full work=4×3=12 days"
+},
+{
+q:"8) A and B together can do work in 6 days, A alone in 9 days. B alone?",
+options:["12","15","18","20"],
+answer:2,
+explanation:"A 1 day=1/9, A+B=1/6 → B=1/6-1/9=1/18 → B alone=18 days"
+},
+{
+q:"9) A can do a work in 15 days, B 20 days. They work together for 5 days. Remaining work?",
+options:["1/6","1/4","1/3","1/5"],
+answer:0,
+explanation:"A+B 1 day=1/15+1/20=7/60, 5 days=35/60=7/12 done, remaining=1-7/12=5/12 ≈0.416=5/12"
+},
+{
+q:"10) A does 1/4 work in 3 days. Time to finish alone?",
+options:["10","11","12","13"],
+answer:2,
+explanation:"1/4=3 days → whole work=3×4=12 days"
+}
+];
+
+let index=0;
+
+function loadQuestion(){
+    const q=questions[index];
+    document.getElementById("question").innerText=q.q;
+    const optDiv=document.getElementById("options");
+    optDiv.innerHTML="";
+    document.getElementById("explanation").style.display="none";
+    document.getElementById("nextBtn").style.display="none";
+    document.getElementById("explainBtn").style.display="none";
+    document.getElementById("prevBtn").disabled=index===0;
+
+    q.options.forEach((opt,i)=>{
+        const d=document.createElement("div");
+        d.className="option";
+        d.innerText=opt;
+        d.onclick=()=>checkAnswer(d,i);
+        optDiv.appendChild(d);
+    });
+}
+
+function checkAnswer(selected,i){
+    const q=questions[index];
+    const opts=document.querySelectorAll(".option");
+
+    opts.forEach((o,idx)=>{
+        o.onclick=null;
+        if(idx===q.answer) o.classList.add("correct");
+    });
+
+    if(i!==q.answer) selected.classList.add("wrong");
+
+    document.getElementById("explanation").innerText=q.explanation;
+    document.getElementById("nextBtn").style.display="inline-block";
+    document.getElementById("explainBtn").style.display="inline-block";
+}
+
+function toggleExplanation(){
+    const e=document.getElementById("explanation");
+    e.style.display=e.style.display==="none"?"block":"none";
+}
+
+function nextQuestion(){
+    index++;
+    if(index<questions.length) loadQuestion();
+    else document.getElementById("card").innerHTML =
+        "<h2>🎉 Quiz Completed!</h2><p>You finished Work & Wages questions.</p>";
+}
+
+function prevQuestion(){
+    if(index>0){ index--; loadQuestion(); }
+}
+
+loadQuestion();
+</script>
+
+</body>
+</html>

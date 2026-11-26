@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Data Structures Quiz</title>
+
+<style>
+body{
+    font-family: Arial, sans-serif;
+    min-height:100vh;
+    margin:0;
+    background: linear-gradient(135deg,#7588db,#8859b7);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:30px;
+}
+.card{
+    background:#fff;
+    max-width:900px;
+    width:100%;
+    padding:25px;
+    border-radius:12px;
+    box-shadow:0 10px 25px rgba(0,0,0,0.3);
+}
+.question{
+    font-size:18px;
+    font-weight:bold;
+    margin-bottom:18px;
+    white-space:pre-line;
+}
+.option{
+    padding:12px;
+    border:2px solid #ddd;
+    border-radius:8px;
+    margin-bottom:12px;
+    cursor:pointer;
+}
+.option:hover{background:#f1f5f9;}
+.correct{
+    background:#dcfce7;
+    border-color:#22c55e;
+    font-weight:bold;
+}
+.wrong{
+    background:#fee2e2;
+    border-color:#ef4444;
+    font-weight:bold;
+}
+button{
+    padding:10px 16px;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+    margin-top:10px;
+}
+#prevBtn{background:#f59e0b;color:white;}
+#nextBtn{background:#16a34a;color:white;display:none;}
+#explainBtn{background:#2563eb;color:white;display:none;}
+.explanation{
+    margin-top:15px;
+    padding:15px;
+    background:#f8fafc;
+    border-left:4px solid #2563eb;
+    display:none;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card" id="card">
+    <div class="question" id="question"></div>
+    <div id="options"></div>
+
+    <button id="prevBtn" onclick="prevQuestion()">Previous</button>
+    <button id="explainBtn" onclick="toggleExplanation()">Show Explanation</button>
+    <button id="nextBtn" onclick="nextQuestion()">Next</button>
+
+    <div class="explanation" id="explanation"></div>
+</div>
+
+<script>
+const questions = [
+{
+q:`1) Which data structure uses FIFO (First In First Out)?`,
+options:["Stack","Queue","Tree","Graph"],
+answer:1,
+explanation:"Queue follows FIFO: first element inserted is the first to be removed."
+},
+{
+q:`2) Which data structure uses LIFO (Last In First Out)?`,
+options:["Stack","Queue","Linked List","Heap"],
+answer:0,
+explanation:"Stack follows LIFO: last element inserted is the first to be removed."
+},
+{
+q:`3) Which of these is a linear data structure?`,
+options:["Array","Tree","Graph","Heap"],
+answer:0,
+explanation:"Arrays are linear; elements are stored sequentially."
+},
+{
+q:`4) Which of these is a non-linear data structure?`,
+options:["Stack","Queue","Linked List","Tree"],
+answer:3,
+explanation:"Trees are non-linear; hierarchical relationship among nodes."
+},
+{
+q:`5) Time complexity of accessing an element in array?`,
+options:["O(1)","O(n)","O(log n)","O(n log n)"],
+answer:0,
+explanation:"Arrays allow direct index access, O(1)."
+},
+{
+q:`6) Which data structure is used in recursion?`,
+options:["Queue","Stack","Linked List","Graph"],
+answer:1,
+explanation:"Function calls are maintained in call stack; recursion uses stack."
+},
+{
+q:`7) Which of the following is dynamic in size?`,
+options:["Array","Stack (static)","Linked List","Queue (static)"],
+answer:2,
+explanation:"Linked List size can change dynamically at runtime."
+},
+{
+q:`8) Which traversal of tree uses Queue?`,
+options:["Pre-order","In-order","Post-order","Level-order"],
+answer:3,
+explanation:"Level-order traversal uses Queue to traverse level by level."
+},
+{
+q:`9) Which is NOT a type of Linked List?`,
+options:["Singly Linked List","Doubly Linked List","Circular Linked List","Binary Linked List"],
+answer:3,
+explanation:"Binary Linked List is not a standard type."
+},
+{
+q:`10) Which data structure is used in BFS (Breadth First Search)?`,
+options:["Stack","Queue","Heap","Priority Queue"],
+answer:1,
+explanation:"BFS uses Queue to explore nodes level by level."
+}
+];
+
+let index = 0;
+
+function loadQuestion(){
+    const q = questions[index];
+    document.getElementById("question").innerText = q.q;
+    const optDiv = document.getElementById("options");
+    optDiv.innerHTML="";
+    document.getElementById("explanation").style.display="none";
+    document.getElementById("nextBtn").style.display="none";
+    document.getElementById("explainBtn").style.display="none";
+    document.getElementById("prevBtn").disabled=index===0;
+
+    q.options.forEach((opt,i)=>{
+        const d=document.createElement("div");
+        d.className="option";
+        d.innerText=opt;
+        d.onclick=()=>checkAnswer(d,i);
+        optDiv.appendChild(d);
+    });
+}
+
+function checkAnswer(selected,i){
+    const q = questions[index];
+    const opts = document.querySelectorAll(".option");
+
+    opts.forEach((o,idx)=>{
+        o.onclick=null;
+        if(idx===q.answer) o.classList.add("correct");
+    });
+
+    if(i!==q.answer) selected.classList.add("wrong");
+
+    document.getElementById("explanation").innerText=q.explanation;
+    document.getElementById("nextBtn").style.display="inline-block";
+    document.getElementById("explainBtn").style.display="inline-block";
+}
+
+function toggleExplanation(){
+    const e=document.getElementById("explanation");
+    e.style.display=e.style.display==="none"?"block":"none";
+}
+
+function nextQuestion(){
+    index++;
+    if(index<questions.length) loadQuestion();
+    else document.getElementById("card").innerHTML =
+        "<h2>🎉 Quiz Completed!</h2><p>You finished Data Structures questions.</p>";
+}
+
+function prevQuestion(){
+    if(index>0){ index--; loadQuestion(); }
+}
+
+loadQuestion();
+</script>
+
+</body>
+</html>

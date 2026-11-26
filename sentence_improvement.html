@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Sentence Improvement Quiz</title>
+
+<style>
+body{
+    margin:0;
+    min-height:100vh;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg,#7588db,#8859b7);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:30px;
+}
+.card{
+    background:#fff;
+    max-width:900px;
+    width:100%;
+    padding:25px;
+    border-radius:14px;
+    box-shadow:0 15px 30px rgba(0,0,0,0.25);
+}
+.question{
+    font-size:18px;
+    font-weight:bold;
+    margin-bottom:18px;
+}
+.option{
+    padding:12px;
+    border:2px solid #e5e7eb;
+    border-radius:8px;
+    margin-bottom:12px;
+    cursor:pointer;
+}
+.option:hover{
+    background:#f9fafb;
+}
+.correct{
+    background:#dcfce7;
+    border-color:#22c55e;
+    font-weight:bold;
+}
+.wrong{
+    background:#fee2e2;
+    border-color:#ef4444;
+    font-weight:bold;
+}
+button{
+    padding:10px 16px;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+    margin-top:12px;
+}
+#prevBtn{background:#f59e0b;color:#fff;}
+#nextBtn{background:#16a34a;color:#fff;display:none;}
+#explainBtn{background:#2563eb;color:#fff;display:none;}
+.explanation{
+    margin-top:15px;
+    padding:15px;
+    background:#f1f5f9;
+    border-left:4px solid #2563eb;
+    display:none;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card" id="card">
+    <div class="question" id="question"></div>
+    <div id="options"></div>
+
+    <button id="prevBtn" onclick="prevQuestion()">Previous</button>
+    <button id="explainBtn" onclick="toggleExplanation()">Show Explanation</button>
+    <button id="nextBtn" onclick="nextQuestion()">Next</button>
+
+    <div class="explanation" id="explanation"></div>
+</div>
+
+<script>
+const questions = [
+{
+q:"1) He did not know where ___",
+options:[
+"was she going",
+"she was going",
+"was going she",
+"No improvement"
+],
+answer:1,
+explanation:"Indirect speech uses subject + verb order → 'she was going'"
+},
+{
+q:"2) She is one of the best player in the team.",
+options:[
+"best players",
+"best playing",
+"better player",
+"No improvement"
+],
+answer:0,
+explanation:"'One of the' is followed by plural noun → best players"
+},
+{
+q:"3) He is senior than me.",
+options:[
+"senior to me",
+"senior from me",
+"senior over me",
+"No improvement"
+],
+answer:0,
+explanation:"'Senior' takes 'to', not 'than'"
+},
+{
+q:"4) Each of the boys were present.",
+options:[
+"was present",
+"are present",
+"have been present",
+"No improvement"
+],
+answer:0,
+explanation:"'Each' is singular → was present"
+},
+{
+q:"5) She prefers coffee than tea.",
+options:[
+"prefers coffee over tea",
+"prefers coffee to tea",
+"prefers coffee with tea",
+"No improvement"
+],
+answer:1,
+explanation:"'Prefer' is followed by 'to'"
+},
+{
+q:"6) He is more intelligent than any boy in the class.",
+options:[
+"than any other boy",
+"than all boys",
+"than every boy",
+"No improvement"
+],
+answer:0,
+explanation:"Correct comparison → 'any other boy'"
+},
+{
+q:"7) The news are very shocking.",
+options:[
+"news is very shocking",
+"news were very shocking",
+"news has very shocking",
+"No improvement"
+],
+answer:0,
+explanation:"'News' is singular → is"
+},
+{
+q:"8) She did not wrote the letter.",
+options:[
+"did not written",
+"did not write",
+"did not writing",
+"No improvement"
+],
+answer:1,
+explanation:"After 'did', base form of verb is used"
+},
+{
+q:"9) He denied to take the money.",
+options:[
+"denied taking the money",
+"denied to taking the money",
+"denied took the money",
+"No improvement"
+],
+answer:0,
+explanation:"'Deny' is followed by gerund (-ing)"
+},
+{
+q:"10) The teacher along with the students were present.",
+options:[
+"was present",
+"are present",
+"have been present",
+"No improvement"
+],
+answer:0,
+explanation:"Subject is 'teacher' → singular verb"
+}
+];
+
+let index=0;
+
+function loadQuestion(){
+    const q=questions[index];
+    document.getElementById("question").innerText=q.q;
+    const optDiv=document.getElementById("options");
+    optDiv.innerHTML="";
+    document.getElementById("explanation").style.display="none";
+    document.getElementById("nextBtn").style.display="none";
+    document.getElementById("explainBtn").style.display="none";
+    document.getElementById("prevBtn").disabled=index===0;
+
+    q.options.forEach((opt,i)=>{
+        const d=document.createElement("div");
+        d.className="option";
+        d.innerText=opt;
+        d.onclick=()=>checkAnswer(d,i);
+        optDiv.appendChild(d);
+    });
+}
+
+function checkAnswer(selected,i){
+    const q=questions[index];
+    const opts=document.querySelectorAll(".option");
+
+    opts.forEach((o,idx)=>{
+        o.onclick=null;
+        if(idx===q.answer) o.classList.add("correct");
+    });
+
+    if(i!==q.answer) selected.classList.add("wrong");
+
+    document.getElementById("explanation").innerText=q.explanation;
+    document.getElementById("nextBtn").style.display="inline-block";
+    document.getElementById("explainBtn").style.display="inline-block";
+}
+
+function toggleExplanation(){
+    const e=document.getElementById("explanation");
+    e.style.display=e.style.display==="none"?"block":"none";
+}
+
+function nextQuestion(){
+    index++;
+    if(index<questions.length){
+        loadQuestion();
+    }else{
+        document.getElementById("card").innerHTML=
+        "<h2>🎉 Quiz Completed!</h2><p>Sentence Improvement test finished.</p>";
+    }
+}
+
+function prevQuestion(){
+    if(index>0){index--;loadQuestion();}
+}
+
+loadQuestion();
+</script>
+
+</body>
+</html>

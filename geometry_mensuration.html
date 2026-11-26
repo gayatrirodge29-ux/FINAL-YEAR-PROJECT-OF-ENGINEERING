@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Geometry & Mensuration Quiz</title>
+
+<style>
+body{
+    font-family: Arial, sans-serif;
+    min-height:100vh;
+    margin:0;
+    background: linear-gradient(135deg,#7588db,#8859b7);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:30px;
+}
+.card{
+    background:#fff;
+    max-width:800px;
+    width:100%;
+    padding:25px;
+    border-radius:12px;
+    box-shadow:0 10px 25px rgba(0,0,0,0.3);
+}
+.question{
+    font-size:19px;
+    font-weight:bold;
+    margin-bottom:20px;
+}
+.option{
+    padding:12px;
+    border:2px solid #ddd;
+    border-radius:8px;
+    margin-bottom:12px;
+    cursor:pointer;
+}
+.option:hover{background:#f1f5f9;}
+.correct{
+    background:#dcfce7;
+    border-color:#22c55e;
+    font-weight:bold;
+}
+.wrong{
+    background:#fee2e2;
+    border-color:#ef4444;
+    font-weight:bold;
+}
+button{
+    padding:10px 16px;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+    margin-top:10px;
+}
+#prevBtn{background:#f59e0b;color:white;}
+#nextBtn{background:#16a34a;color:white;display:none;}
+#explainBtn{background:#2563eb;color:white;display:none;}
+.explanation{
+    margin-top:15px;
+    padding:15px;
+    background:#f8fafc;
+    border-left:4px solid #2563eb;
+    display:none;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card" id="card">
+    <div class="question" id="question"></div>
+    <div id="options"></div>
+
+    <button id="prevBtn" onclick="prevQuestion()">Previous</button>
+    <button id="explainBtn" onclick="toggleExplanation()">Show Explanation</button>
+    <button id="nextBtn" onclick="nextQuestion()">Next</button>
+
+    <div class="explanation" id="explanation"></div>
+</div>
+
+<script>
+const questions = [
+{
+q:"1) Area of a circle with radius 7 cm?",
+options:["154 cm²","144 cm²","150 cm²","160 cm²"],
+answer:0,
+explanation:"Area = πr² = 3.14 × 7 × 7 ≈ 153.86 ≈ 154 cm²"
+},
+{
+q:"2) Perimeter of a rectangle 10 cm × 6 cm?",
+options:["32 cm","30 cm","28 cm","36 cm"],
+answer:0,
+explanation:"Perimeter = 2(l+b)=2(10+6)=32 cm"
+},
+{
+q:"3) Volume of cube with side 5 cm?",
+options:["125 cm³","150 cm³","100 cm³","120 cm³"],
+answer:0,
+explanation:"Volume = a³ = 5³ = 125 cm³"
+},
+{
+q:"4) Surface area of sphere radius 7 cm?",
+options:["615 cm²","616 cm²","618 cm²","620 cm²"],
+answer:1,
+explanation:"Surface area = 4πr² = 4×3.14×49 ≈ 615.76 ≈ 616 cm²"
+},
+{
+q:"5) Area of triangle with base 10 cm, height 8 cm?",
+options:["40","50","35","45"],
+answer:0,
+explanation:"Area = 1/2 × base × height = 0.5 × 10 × 8 = 40 cm²"
+},
+{
+q:"6) Circumference of circle radius 14 cm?",
+options:["88 cm","87.92 cm","86 cm","85 cm"],
+answer:1,
+explanation:"Circumference = 2πr = 2×3.14×14 ≈ 87.92 cm"
+},
+{
+q:"7) Volume of cylinder radius 7 cm, height 10 cm?",
+options:["1540","1500","1400","1600"],
+answer:0,
+explanation:"Volume = πr²h = 3.14×49×10 ≈ 1538.6 ≈ 1540 cm³"
+},
+{
+q:"8) Total surface area of cube side 6 cm?",
+options:["216","200","230","250"],
+answer:0,
+explanation:"TSA = 6a² = 6×36=216 cm²"
+},
+{
+q:"9) Area of square with diagonal 10 cm?",
+options:["50","40","45","48"],
+answer:0,
+explanation:"Area = (diagonal²)/2 = 100/2 = 50 cm²"
+},
+{
+q:"10) Surface area of cylinder radius 5 cm, height 10 cm?",
+options:["471","480","450","500"],
+answer:0,
+explanation:"TSA = 2πr(h+r)=2×3.14×5(10+5)=2×3.14×5×15≈471 cm²"
+}
+];
+
+let index=0;
+
+function loadQuestion(){
+    const q=questions[index];
+    document.getElementById("question").innerText=q.q;
+    const optDiv=document.getElementById("options");
+    optDiv.innerHTML="";
+    document.getElementById("explanation").style.display="none";
+    document.getElementById("nextBtn").style.display="none";
+    document.getElementById("explainBtn").style.display="none";
+    document.getElementById("prevBtn").disabled=index===0;
+
+    q.options.forEach((opt,i)=>{
+        const d=document.createElement("div");
+        d.className="option";
+        d.innerText=opt;
+        d.onclick=()=>checkAnswer(d,i);
+        optDiv.appendChild(d);
+    });
+}
+
+function checkAnswer(selected,i){
+    const q=questions[index];
+    const opts=document.querySelectorAll(".option");
+    opts.forEach((o,idx)=>{
+        o.onclick=null;
+        if(idx===q.answer) o.classList.add("correct");
+    });
+    if(i!==q.answer) selected.classList.add("wrong");
+
+    document.getElementById("explanation").innerText=q.explanation;
+    document.getElementById("nextBtn").style.display="inline-block";
+    document.getElementById("explainBtn").style.display="inline-block";
+}
+
+function toggleExplanation(){
+    const e=document.getElementById("explanation");
+    e.style.display=e.style.display==="none"?"block":"none";
+}
+
+function nextQuestion(){
+    index++;
+    if(index<questions.length) loadQuestion();
+    else document.getElementById("card").innerHTML =
+        "<h2>🎉 Quiz Completed!</h2><p>You finished Geometry & Mensuration questions.</p>";
+}
+
+function prevQuestion(){
+    if(index>0){ index--; loadQuestion(); }
+}
+
+loadQuestion();
+</script>
+
+</body>
+</html>

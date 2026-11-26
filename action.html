@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Course of Action Quiz</title>
+
+<style>
+body{
+    font-family: Arial, sans-serif;
+    min-height:100vh;
+    margin:0;
+    background: linear-gradient(135deg,#7588db,#8859b7);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:30px;
+}
+.card{
+    background:#fff;
+    max-width:800px;
+    width:100%;
+    padding:25px;
+    border-radius:12px;
+    box-shadow:0 10px 25px rgba(0,0,0,0.3);
+}
+.question{
+    font-size:19px;
+    font-weight:bold;
+    margin-bottom:20px;
+}
+.option{
+    padding:12px;
+    border:2px solid #ddd;
+    border-radius:8px;
+    margin-bottom:12px;
+    cursor:pointer;
+}
+.option:hover{background:#f1f5f9;}
+.correct{
+    background:#dcfce7;
+    border-color:#22c55e;
+    font-weight:bold;
+}
+.wrong{
+    background:#fee2e2;
+    border-color:#ef4444;
+    font-weight:bold;
+}
+button{
+    padding:10px 16px;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+    margin-top:10px;
+}
+#prevBtn{background:#f59e0b;color:white;}
+#nextBtn{background:#16a34a;color:white;display:none;}
+#explainBtn{background:#2563eb;color:white;display:none;}
+.explanation{
+    margin-top:15px;
+    padding:15px;
+    background:#f8fafc;
+    border-left:4px solid #2563eb;
+    display:none;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card" id="card">
+    <div class="question" id="question"></div>
+    <div id="options"></div>
+
+    <button id="prevBtn" onclick="prevQuestion()">Previous</button>
+    <button id="explainBtn" onclick="toggleExplanation()">Show Explanation</button>
+    <button id="nextBtn" onclick="nextQuestion()">Next</button>
+
+    <div class="explanation" id="explanation"></div>
+</div>
+
+<script>
+const questions = [
+{
+q:"1) Statement: A few students were found copying in the exam. Course of Action?",
+options:[
+"Warn the students and continue the exam",
+"Ignore it",
+"Cancel the exam",
+"Report to principal"
+],
+answer:0,
+explanation:"The appropriate action is to warn the students and allow the exam to continue."
+},
+{
+q:"2) Statement: Roads are broken in many parts of the city. Course of Action?",
+options:[
+"Report to authorities for repair",
+"Drive carefully",
+"Construct new roads yourself",
+"Ignore it"
+],
+answer:0,
+explanation:"The proper course of action is to report to authorities for repair."
+},
+{
+q:"3) Statement: Fire is seen in a building. Course of Action?",
+options:[
+"Inform fire brigade immediately",
+"Take photos and post online",
+"Ignore it",
+"Call a friend"
+],
+answer:0,
+explanation:"The correct action is to inform the fire brigade immediately."
+},
+{
+q:"4) Statement: Students are throwing garbage in school. Course of Action?",
+options:[
+"Teach them the importance of cleanliness",
+"Ignore it",
+"Scold them harshly",
+"Report to police"
+],
+answer:0,
+explanation:"The reasonable action is to teach students proper cleanliness."
+},
+{
+q:"5) Statement: Heavy rainfall has caused water logging in the city. Course of Action?",
+options:[
+"Inform local authorities",
+"Do nothing",
+"Go swimming in water logged area",
+"Spread panic"
+],
+answer:0,
+explanation:"Reporting to authorities is the logical action."
+},
+{
+q:"6) Statement: A child is lost in a market. Course of Action?",
+options:[
+"Help find the child or inform authorities",
+"Ignore and walk away",
+"Shout at the child",
+"Take child home yourself"
+],
+answer:0,
+explanation:"Helping to find the child or informing authorities is the correct approach."
+},
+{
+q:"7) Statement: Someone is attempting to steal in a shop. Course of Action?",
+options:[
+"Inform the shopkeeper or authorities",
+"Join them",
+"Ignore",
+"Post on social media"
+],
+answer:0,
+explanation:"The right course of action is to alert the shopkeeper or authorities."
+},
+{
+q:"8) Statement: Traffic lights not working at a junction. Course of Action?",
+options:[
+"Drive carefully and inform traffic police",
+"Drive fast",
+"Ignore",
+"Block the road"
+],
+answer:0,
+explanation:"The responsible action is to drive safely and inform authorities."
+},
+{
+q:"9) Statement: Neighbor’s house is on fire. Course of Action?",
+options:[
+"Call fire brigade",
+"Take video",
+"Do nothing",
+"Run away"
+],
+answer:0,
+explanation:"Immediately call the fire brigade."
+},
+{
+q:"10) Statement: Someone is feeling unwell in public. Course of Action?",
+options:[
+"Help or take them to hospital",
+"Ignore",
+"Take photo",
+"Scold them"
+],
+answer:0,
+explanation:"Help them or take them to the hospital is appropriate."
+}
+];
+
+let index=0;
+
+function loadQuestion(){
+    const q=questions[index];
+    document.getElementById("question").innerText=q.q;
+    const optDiv=document.getElementById("options");
+    optDiv.innerHTML="";
+    document.getElementById("explanation").style.display="none";
+    document.getElementById("nextBtn").style.display="none";
+    document.getElementById("explainBtn").style.display="none";
+    document.getElementById("prevBtn").disabled=index===0;
+
+    q.options.forEach((opt,i)=>{
+        const d=document.createElement("div");
+        d.className="option";
+        d.innerText=opt;
+        d.onclick=()=>checkAnswer(d,i);
+        optDiv.appendChild(d);
+    });
+}
+
+function checkAnswer(selected,i){
+    const q=questions[index];
+    const opts=document.querySelectorAll(".option");
+    opts.forEach((o,idx)=>{
+        o.onclick=null;
+        if(idx===q.answer) o.classList.add("correct");
+    });
+    if(i!==q.answer) selected.classList.add("wrong");
+
+    document.getElementById("explanation").innerText=q.explanation;
+    document.getElementById("nextBtn").style.display="inline-block";
+    document.getElementById("explainBtn").style.display="inline-block";
+}
+
+function toggleExplanation(){
+    const e=document.getElementById("explanation");
+    e.style.display=e.style.display==="none"?"block":"none";
+}
+
+function nextQuestion(){
+    index++;
+    if(index<questions.length) loadQuestion();
+    else document.getElementById("card").innerHTML =
+        "<h2>🎉 Quiz Completed!</h2><p>You finished Course of Action questions.</p>";
+}
+
+function prevQuestion(){
+    if(index>0){ index--; loadQuestion(); }
+}
+
+loadQuestion();
+</script>
+
+</body>
+</html>

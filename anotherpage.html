@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      :root {
+        --accent: #2b6cb0;
+        --accent-light: #63b3ed;
+        --bg: #b6b8c0;
+        --white: #f6f0f4;
+        --dark: #0f172a;
+      }
+
+      body {
+        display: flex;
+        flex-direction: column; /* stack vertically */
+        align-items: center; /* center horizontally */
+        justify-content: center; /* center vertically */
+        min-height: 100vh;
+        margin: 0;
+        background: linear-gradient(120deg, var(--accent), var(--accent-light));
+        color: white;
+        overflow-y: auto;
+        margin-bottom: 50px;
+      }
+
+      .hero {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+      }
+      p {
+        font-size: 36px;
+        font-weight: 600;
+      }
+      .top-btn {
+        margin-top: 10px;
+        text-align: center;
+        padding: 10px 28px;
+        font-size: 18px;
+        font-weight: 600;
+        border-radius: 10px;
+        text-decoration: none;
+        background: white;
+        color: var(--accent);
+        transition: 0.2s ease;
+      }
+    </style>
+  </head>
+  <body>
+    <p>Companies</p>
+    <div class="hero">
+      <a href="tcs.html" class="top-btn">
+        <i class="fa-solid fa-arrow-right"></i> TCS
+      </a>
+      <a href="infosys.html" class="top-btn" style="top: 14rem">
+        <i class="fa-solid fa-arrow-right"></i> INFOSYS
+      </a>
+      <a href="cognizant.html" class="top-btn" style="top: 14rem">
+        <i class="fa-solid fa-arrow-right"></i> COGNIZANT
+      </a>
+      <a href="deloitte.html" class="top-btn" style="top: 14rem">
+        <i class="fa-solid fa-arrow-right"></i> DELOITTE
+      </a>
+      <a href="capgemini.html" class="top-btn" style="top: 14rem">
+        <i class="fa-solid fa-arrow-right"></i> CAPGEMINI
+      </a>
+      <a href="hcl.html" class="top-btn" style="top: 14rem">
+        <i class="fa-solid fa-arrow-right"></i> HCL
+      </a>
+      <a href="wipro.html" class="top-btn" style="top: 14rem">
+        <i class="fa-solid fa-arrow-right"></i> WIPRO
+      </a>
+      <a href="accenture.html" class="top-btn" style="top: 14rem">
+        <i class="fa-solid fa-arrow-right"></i> ACCENTURE
+      </a>
+      <a href="tech.html" class="top-btn" style="top: 14rem">
+        <i class="fa-solid fa-arrow-right"></i> TECH MAHINDRA
+      </a>
+      <a href="ibm.html" class="top-btn" style="top: 14rem">
+        <i class="fa-solid fa-arrow-right"></i> IBM
+      </a>
+    </div>
+  </body>
+</html>

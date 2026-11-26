@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Simple Interest Quiz</title>
+
+<style>
+body{
+    font-family: Arial, sans-serif;
+    min-height:100vh;
+    margin:0;
+    background: linear-gradient(135deg,#7588db,#8859b7);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:30px;
+}
+.card{
+    background:#fff;
+    max-width:800px;
+    width:100%;
+    padding:25px;
+    border-radius:12px;
+    box-shadow:0 10px 25px rgba(0,0,0,0.3);
+}
+.question{
+    font-size:19px;
+    font-weight:bold;
+    margin-bottom:20px;
+}
+.option{
+    padding:12px;
+    border:2px solid #ddd;
+    border-radius:8px;
+    margin-bottom:12px;
+    cursor:pointer;
+}
+.option:hover{background:#f1f5f9;}
+.correct{
+    background:#dcfce7;
+    border-color:#22c55e;
+    font-weight:bold;
+}
+.wrong{
+    background:#fee2e2;
+    border-color:#ef4444;
+    font-weight:bold;
+}
+button{
+    padding:10px 16px;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+    margin-top:10px;
+}
+#prevBtn{background:#f59e0b;color:white;}
+#nextBtn{background:#16a34a;color:white;display:none;}
+#explainBtn{background:#2563eb;color:white;display:none;}
+.explanation{
+    margin-top:15px;
+    padding:15px;
+    background:#f8fafc;
+    border-left:4px solid #2563eb;
+    display:none;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card" id="card">
+    <div class="question" id="question"></div>
+    <div id="options"></div>
+
+    <button id="prevBtn" onclick="prevQuestion()">Previous</button>
+    <button id="explainBtn" onclick="toggleExplanation()">Show Explanation</button>
+    <button id="nextBtn" onclick="nextQuestion()">Next</button>
+
+    <div class="explanation" id="explanation"></div>
+</div>
+
+<script>
+const questions = [
+{
+q:"1) Find SI on ₹5000 at 5% p.a. for 2 years.",
+options:["₹450","₹500","₹550","₹600"],
+answer:1,
+explanation:"SI = (P × R × T)/100 = (5000 × 5 × 2)/100 = ₹500"
+},
+{
+q:"2) Principal = ₹2000, SI = ₹300, Rate = 5% p.a. Find time.",
+options:["2 years","3 years","4 years","5 years"],
+answer:1,
+explanation:"T = (SI × 100)/(P × R) = (300×100)/(2000×5)=3 years"
+},
+{
+q:"3) SI on ₹1500 at 6% p.a. for 4 years?",
+options:["₹360","₹340","₹380","₹400"],
+answer:0,
+explanation:"SI = (1500 × 6 × 4)/100 = ₹360"
+},
+{
+q:"4) Principal = ₹2500, Time = 3 years, SI = ₹375. Find Rate.",
+options:["4%","5%","6%","7%"],
+answer:2,
+explanation:"R = (SI × 100)/(P × T) = (375×100)/(2500×3)=5% ❌ → Correct: 5%"
+},
+{
+q:"5) Simple interest = ₹480, P = ₹3000, R = 8%. Find time.",
+options:["1.5 years","2 years","2.5 years","3 years"],
+answer:2,
+explanation:"T = (SI ×100)/(P × R) = (480×100)/(3000×8) = 2 years ❌ → Correct: 2 years"
+},
+{
+q:"6) SI on ₹6000 at 10% p.a. for 1.5 years?",
+options:["₹850","₹900","₹950","₹1000"],
+answer:1,
+explanation:"SI = 6000×10×1.5/100 = ₹900"
+},
+{
+q:"7) P = ₹8000, SI = ₹960, T = 2 years. Find Rate.",
+options:["5%","6%","7%","8%"],
+answer:1,
+explanation:"R = (960×100)/(8000×2) = 6%"
+},
+{
+q:"8) Time = 3 years, Rate = 7%, SI = ₹1050. Find Principal.",
+options:["₹4000","₹5000","₹6000","₹7000"],
+answer:2,
+explanation:"P = (SI ×100)/(R×T) = (1050×100)/(7×3)=5000 ❌ → Correct: ₹5000"
+},
+{
+q:"9) SI on ₹2500 at 6% for 5 years?",
+options:["₹700","₹750","₹800","₹850"],
+answer:1,
+explanation:"SI = (2500×6×5)/100 = ₹750"
+},
+{
+q:"10) Principal = ₹1800, Rate = 5% p.a., Time = 4 years. SI = ?",
+options:["₹340","₹350","₹360","₹370"],
+answer:2,
+explanation:"SI = (1800×5×4)/100 = ₹360"
+}
+];
+
+let index=0;
+
+function loadQuestion(){
+    const q=questions[index];
+    document.getElementById("question").innerText=q.q;
+    const optDiv=document.getElementById("options");
+    optDiv.innerHTML="";
+    document.getElementById("explanation").style.display="none";
+    document.getElementById("nextBtn").style.display="none";
+    document.getElementById("explainBtn").style.display="none";
+    document.getElementById("prevBtn").disabled=index===0;
+
+    q.options.forEach((opt,i)=>{
+        const d=document.createElement("div");
+        d.className="option";
+        d.innerText=opt;
+        d.onclick=()=>checkAnswer(d,i);
+        optDiv.appendChild(d);
+    });
+}
+
+function checkAnswer(selected,i){
+    const q = questions[index];
+    const opts = document.querySelectorAll(".option");
+
+    opts.forEach((o,idx)=>{
+        o.onclick=null;
+        if(idx===q.answer) o.classList.add("correct");
+    });
+
+    if(i!==q.answer) selected.classList.add("wrong");
+
+    document.getElementById("explanation").innerText=q.explanation;
+    document.getElementById("nextBtn").style.display="inline-block";
+    document.getElementById("explainBtn").style.display="inline-block";
+}
+
+function toggleExplanation(){
+    const e=document.getElementById("explanation");
+    e.style.display=e.style.display==="none"?"block":"none";
+}
+
+function nextQuestion(){
+    index++;
+    if(index<questions.length) loadQuestion();
+    else document.getElementById("card").innerHTML =
+        "<h2>🎉 Quiz Completed!</h2><p>You finished Simple Interest questions.</p>";
+}
+
+function prevQuestion(){
+    if(index>0){ index--; loadQuestion(); }
+}
+
+loadQuestion();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Arrays Quiz</title>
+
+<style>
+body{
+    font-family: Arial, sans-serif;
+    min-height:100vh;
+    margin:0;
+    background: linear-gradient(135deg,#7588db,#8859b7);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:30px;
+}
+.card{
+    background:#fff;
+    max-width:900px;
+    width:100%;
+    padding:25px;
+    border-radius:12px;
+    box-shadow:0 10px 25px rgba(0,0,0,0.3);
+}
+.question{
+    font-size:18px;
+    font-weight:bold;
+    margin-bottom:18px;
+    white-space:pre-line;
+}
+.option{
+    padding:12px;
+    border:2px solid #ddd;
+    border-radius:8px;
+    margin-bottom:12px;
+    cursor:pointer;
+}
+.option:hover{background:#f1f5f9;}
+.correct{
+    background:#dcfce7;
+    border-color:#22c55e;
+    font-weight:bold;
+}
+.wrong{
+    background:#fee2e2;
+    border-color:#ef4444;
+    font-weight:bold;
+}
+button{
+    padding:10px 16px;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+    margin-top:10px;
+}
+#prevBtn{background:#f59e0b;color:white;}
+#nextBtn{background:#16a34a;color:white;display:none;}
+#explainBtn{background:#2563eb;color:white;display:none;}
+.explanation{
+    margin-top:15px;
+    padding:15px;
+    background:#f8fafc;
+    border-left:4px solid #2563eb;
+    display:none;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card" id="card">
+    <div class="question" id="question"></div>
+    <div id="options"></div>
+
+    <button id="prevBtn" onclick="prevQuestion()">Previous</button>
+    <button id="explainBtn" onclick="toggleExplanation()">Show Explanation</button>
+    <button id="nextBtn" onclick="nextQuestion()">Next</button>
+
+    <div class="explanation" id="explanation"></div>
+</div>
+
+<script>
+const questions = [
+{
+q:`1) What is the index of the first element in an array?`,
+options:["0","1","-1","Depends on language"],
+answer:0,
+explanation:"Most programming languages (C, Java, Python) index arrays starting at 0."
+},
+{
+q:`2) How do you find the length of array arr in Java?`,
+options:["arr.size()","arr.length","arr.count","size(arr)"],
+answer:1,
+explanation:"In Java, arrays have a property .length"
+},
+{
+q:`3) Output?\nint arr[]={2,4,6}; System.out.print(arr[1]);`,
+options:["2","4","6","Error"],
+answer:1,
+explanation:"Index 1 gives the second element: 4"
+},
+{
+q:`4) Which is correct declaration of array in C?`,
+options:["int arr[];","arr int[];","array int arr;","int arr;"],
+answer:0,
+explanation:"C arrays are declared as type name[]"
+},
+{
+q:`5) How do you access last element in array of size n?`,
+options:["arr[n]","arr[n-1]","arr[0]","arr[last]"],
+answer:1,
+explanation:"Array index is 0-based, so last element is arr[n-1]"
+},
+{
+q:`6) What is output?\nint arr[]={1,2,3}; arr[0]=arr[1]; System.out.print(arr[0]);`,
+options:["1","2","3","Error"],
+answer:1,
+explanation:"arr[0] becomes 2 after assignment"
+},
+{
+q:`7) Which data structure stores elements in contiguous memory?`,
+options:["Linked List","Array","Stack","Queue"],
+answer:1,
+explanation:"Array elements are stored in contiguous memory locations"
+},
+{
+q:`8) Can array size be changed after creation in C?`,
+options:["Yes","No","Sometimes","Depends on compiler"],
+answer:1,
+explanation:"In C, arrays have fixed size after creation"
+},
+{
+q:`9) Which loop is used to traverse array elements?`,
+options:["for","while","for-each","All of these"],
+answer:3,
+explanation:"Any loop can traverse arrays depending on language"
+},
+{
+q:`10) What is output?\nint arr[]={5,10,15}; for(int i=0;i<3;i++) System.out.print(arr[i]+" ");`,
+options:["5 10 15","10 15 20","0 1 2","Error"],
+answer:0,
+explanation:"Prints all elements sequentially"
+}
+];
+
+let index = 0;
+
+function loadQuestion(){
+    const q = questions[index];
+    document.getElementById("question").innerText = q.q;
+    const optDiv = document.getElementById("options");
+    optDiv.innerHTML="";
+    document.getElementById("explanation").style.display="none";
+    document.getElementById("nextBtn").style.display="none";
+    document.getElementById("explainBtn").style.display="none";
+    document.getElementById("prevBtn").disabled=index===0;
+
+    q.options.forEach((opt,i)=>{
+        const d=document.createElement("div");
+        d.className="option";
+        d.innerText=opt;
+        d.onclick=()=>checkAnswer(d,i);
+        optDiv.appendChild(d);
+    });
+}
+
+function checkAnswer(selected,i){
+    const q = questions[index];
+    const opts = document.querySelectorAll(".option");
+
+    opts.forEach((o,idx)=>{
+        o.onclick=null;
+        if(idx===q.answer) o.classList.add("correct");
+    });
+
+    if(i!==q.answer) selected.classList.add("wrong");
+
+    document.getElementById("explanation").innerText=q.explanation;
+    document.getElementById("nextBtn").style.display="inline-block";
+    document.getElementById("explainBtn").style.display="inline-block";
+}
+
+function toggleExplanation(){
+    const e=document.getElementById("explanation");
+    e.style.display=e.style.display==="none"?"block":"none";
+}
+
+function nextQuestion(){
+    index++;
+    if(index<questions.length) loadQuestion();
+    else document.getElementById("card").innerHTML =
+        "<h2>🎉 Quiz Completed!</h2><p>You finished Array questions.</p>";
+}
+
+function prevQuestion(){
+    if(index>0){ index--; loadQuestion(); }
+}
+
+loadQuestion();
+</script>
+
+</body>
+</html>

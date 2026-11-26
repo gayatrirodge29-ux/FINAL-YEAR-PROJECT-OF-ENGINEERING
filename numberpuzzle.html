@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Number Puzzle</title>
+
+<style>
+body{
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg,#7588db,#8859b7);
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.container{
+    background:#fff;
+    padding:25px;
+    border-radius:12px;
+    box-shadow:0 10px 25px rgba(0,0,0,0.3);
+    text-align:center;
+}
+
+h1{ margin-bottom:15px; }
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(3,80px);
+    gap:10px;
+    justify-content:center;
+}
+
+.tile{
+    width:80px;
+    height:80px;
+    background:#e5e7eb;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:24px;
+    font-weight:bold;
+    cursor:pointer;
+    border-radius:8px;
+}
+
+.empty{
+    background:#fff;
+    cursor:default;
+}
+
+button{
+    margin-top:15px;
+    padding:10px 16px;
+    border:none;
+    border-radius:6px;
+    background:#4f46e5;
+    color:white;
+    cursor:pointer;
+}
+button:hover{ background:#4338ca; }
+
+#result{
+    margin-top:10px;
+    font-weight:bold;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+<h1>Number Puzzle</h1>
+
+<div class="grid" id="grid"></div>
+
+<button onclick="shuffle()">Shuffle</button>
+<div id="result"></div>
+</div>
+
+<script>
+let puzzle = [1,2,3,4,5,6,7,8,""];
+
+const grid = document.getElementById("grid");
+
+function render(){
+    grid.innerHTML="";
+    puzzle.forEach((num,idx)=>{
+        const div=document.createElement("div");
+        div.className="tile";
+        if(num===""){
+            div.classList.add("empty");
+        }else{
+            div.innerText=num;
+            div.onclick=()=>move(idx);
+        }
+        grid.appendChild(div);
+    });
+}
+
+function move(index){
+    const emptyIndex = puzzle.indexOf("");
+    const validMoves = [
+        index-1,index+1,index-3,index+3
+    ];
+
+    if(validMoves.includes(emptyIndex)){
+        [puzzle[index],puzzle[emptyIndex]] =
+        [puzzle[emptyIndex],puzzle[index]];
+        render();
+        checkWin();
+    }
+}
+
+function shuffle(){
+    puzzle.sort(()=>Math.random()-0.5);
+    render();
+    document.getElementById("result").innerText="";
+}
+
+function checkWin(){
+    const win = [1,2,3,4,5,6,7,8,""];
+    if(JSON.stringify(puzzle)===JSON.stringify(win)){
+        document.getElementById("result").innerText="🎉 Puzzle Solved!";
+    }
+}
+
+render();
+</script>
+
+</body>
+</html>
